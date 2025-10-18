@@ -15,7 +15,7 @@ import { supabase } from '$lib/supabaseClient.js';
  * @property {string|null} phone_number
  * @property {boolean} whatsapp_comm
  * @property {boolean} rent_in_usd
- * @property {Array<{pic_id: string}>} listing_to_pic
+ * @property {Array<{pic_name: string}>} listing_to_pic
  */
 
 /** @type {import('./$types').PageLoad} */

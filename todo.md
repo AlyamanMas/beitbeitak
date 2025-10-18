@@ -1,2 +1,3 @@
 - perhaps filter with supabase instead of locally?
 - pagination
+- price filtration should be able to account for different currencies

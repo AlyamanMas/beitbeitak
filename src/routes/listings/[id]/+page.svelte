@@ -1,5 +1,6 @@
 <script>
 	import { supabase } from '$lib/supabaseClient.js';
+	import { getTownNameArabic } from '$lib/towns.js';
 	import {
 		Home,
 		Bed,
@@ -21,11 +22,11 @@
 
 	/**
 	 * Get public URL for an image from Supabase storage
-	 * @param {string} picId
+	 * @param {string} picName
 	 * @returns {string}
 	 */
-	function getImageUrl(picId) {
-		const { data: urlData } = supabase.storage.from('house_pics').getPublicUrl(picId);
+	function getImageUrl(picName) {
+		const { data: urlData } = supabase.storage.from('house_pics').getPublicUrl(picName);
 		return urlData.publicUrl;
 	}
 
@@ -194,7 +195,7 @@
 				<div class="grid grid-cols-2 gap-3">
 					<!-- Size -->
 					<div class="flex items-center gap-2 text-base-content/80">
-						<Maximize size={20} class="text-primary" />
+						<Maximize size={20} />
 						<div>
 							<div class="text-xs text-base-content/60">المساحة</div>
 							<div class="font-semibold">{data.listing.size_m2} م²</div>
@@ -203,7 +204,7 @@
 
 					<!-- Bedrooms -->
 					<div class="flex items-center gap-2 text-base-content/80">
-						<Bed size={20} class="text-primary" />
+						<Bed size={20} />
 						<div>
 							<div class="text-xs text-base-content/60">غرف النوم</div>
 							<div class="font-semibold">{data.listing.num_bedrooms}</div>
@@ -212,7 +213,7 @@
 
 					<!-- Bathrooms -->
 					<div class="flex items-center gap-2 text-base-content/80">
-						<Bath size={20} class="text-primary" />
+						<Bath size={20} />
 						<div>
 							<div class="text-xs text-base-content/60">الحمامات</div>
 							<div class="font-semibold">{data.listing.num_bathrooms}</div>
@@ -221,10 +222,10 @@
 
 					<!-- Town -->
 					<div class="flex items-center gap-2 text-base-content/80">
-						<Home size={20} class="text-primary" />
+						<Home size={20} />
 						<div>
 							<div class="text-xs text-base-content/60">المنطقة</div>
-							<div class="font-semibold">{data.listing.town}</div>
+							<div class="font-semibold">{getTownNameArabic(data.listing.town)}</div>
 						</div>
 					</div>
 				</div>

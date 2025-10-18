@@ -1,11 +1,14 @@
 <script>
 	import { supabase } from '$lib/supabaseClient.js';
-	import { Home, Bed, Bath, Maximize } from 'lucide-svelte';
+	import { getTownNameArabic } from '$lib/towns.js';
+	import { Home, Bed, Bath, Maximize, SlidersHorizontal, X } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
 
 	// Filter states
+	let showFilters = $state(false);
+	let showTownFilter = $state(false);
 	let selectedTown = $state('');
 	let minPrice = $state(0);
 	let maxPrice = $state(10000000);
@@ -14,11 +17,11 @@
 
 	/**
 	 * Get public URL for an image from Supabase storage
-	 * @param {string} picId
+	 * @param {string} picName
 	 * @returns {string}
 	 */
-	function getImageUrl(picId) {
-		const { data } = supabase.storage.from('house_pics').getPublicUrl(picId);
+	function getImageUrl(picName) {
+		const { data } = supabase.storage.from('house_pics').getPublicUrl(picName);
 		return data.publicUrl;
 	}
 
@@ -46,98 +49,233 @@
 		const formatted = price.toLocaleString('ar-SY');
 		return isUsd ? `$${formatted}` : `${formatted} ل.س`;
 	}
+
+	/**
+	 * Count active filters (excluding town since it has its own button)
+	 * @returns {number}
+	 */
+	let activeFiltersCount = $derived(() => {
+		let count = 0;
+		if (minPrice > 0) count++;
+		if (maxPrice < 10000000) count++;
+		if (minBedrooms > 0) count++;
+		if (minBathrooms > 0) count++;
+		return count;
+	});
+
+	/**
+	 * Reset all filters
+	 */
+	function resetFilters() {
+		selectedTown = '';
+		minPrice = 0;
+		maxPrice = 10000000;
+		minBedrooms = 0;
+		minBathrooms = 0;
+	}
 </script>
 
 <div class="min-h-screen bg-base-200 p-4" dir="rtl">
 	<!-- Header -->
-	<div class="mb-6">
+	<div class="mb-4">
 		<h1 class="mb-2 text-center text-3xl font-bold">بيت بيتك</h1>
 		<p class="text-center text-base-content/70">ابحث عن بيت أحلامك في حمص</p>
 	</div>
 
-	<!-- Filters -->
-	<div class="mb-6 rounded-lg bg-base-100 p-4 shadow-md">
-		<h2 class="mb-4 text-lg font-semibold">تصفية النتائج</h2>
-
-		<div class="grid grid-cols-1 gap-4">
-			<!-- Town Filter -->
-			<div class="form-control w-full">
-				<label class="label" for="town-select">
-					<span class="label-text">المنطقة</span>
-				</label>
-				<select id="town-select" class="select-bordered select w-full" bind:value={selectedTown}>
-					<option value="">جميع المناطق</option>
-					{#each data.towns as town (town)}
-						<option value={town}>{town}</option>
-					{/each}
-				</select>
+	<!-- Filter Buttons -->
+	<div class="mb-4 flex items-center justify-between gap-2">
+		<div class="flex flex-1 gap-2">
+			<!-- Town Filter Button -->
+			<div class="relative">
+				<button
+					onclick={() => (showTownFilter = !showTownFilter)}
+					class="btn gap-2 btn-outline btn-sm"
+				>
+					<Home size={16} />
+					{selectedTown ? getTownNameArabic(selectedTown) : 'المنطقة'}
+				</button>
+				{#if showTownFilter}
+					<!-- Dropdown overlay to close on outside click -->
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<div
+						class="fixed inset-0 z-10"
+						onclick={() => (showTownFilter = false)}
+						role="button"
+						tabindex="-1"
+					></div>
+					<div
+						class="absolute right-0 z-20 mt-2 w-52 rounded-lg border border-base-300 bg-base-100 p-2 shadow-lg"
+					>
+						<ul class="menu overflow-y-auto p-0">
+							<li>
+								<button
+									onclick={() => {
+										selectedTown = '';
+										showTownFilter = false;
+									}}
+									class="text-right {selectedTown === '' ? 'active' : ''}"
+								>
+									جميع المناطق
+								</button>
+							</li>
+							{#each data.towns as town (town)}
+								<li>
+									<button
+										onclick={() => {
+											selectedTown = town;
+											showTownFilter = false;
+										}}
+										class="text-right {selectedTown === town ? 'active' : ''}"
+									>
+										{getTownNameArabic(town)}
+									</button>
+								</li>
+							{/each}
+						</ul>
+					</div>
+				{/if}
 			</div>
 
-			<!-- Price Range -->
-			<div class="form-control w-full">
-				<label class="label" for="min-price">
-					<span class="label-text">الحد الأدنى للسعر</span>
-				</label>
-				<input
-					id="min-price"
-					type="number"
-					placeholder="0"
-					class="input-bordered input w-full"
-					bind:value={minPrice}
-				/>
-			</div>
+			<!-- All Filters Button -->
+			<button onclick={() => (showFilters = true)} class="btn gap-2 btn-outline btn-sm">
+				<SlidersHorizontal size={16} />
+				المزيد
+				{#if activeFiltersCount() > 0}
+					<span class="badge badge-sm badge-primary">{activeFiltersCount()}</span>
+				{/if}
+			</button>
+		</div>
 
-			<div class="form-control w-full">
-				<label class="label" for="max-price">
-					<span class="label-text">الحد الأقصى للسعر</span>
-				</label>
-				<input
-					id="max-price"
-					type="number"
-					placeholder="10000000"
-					class="input-bordered input w-full"
-					bind:value={maxPrice}
-				/>
-			</div>
-
-			<!-- Bedrooms Filter -->
-			<div class="form-control w-full">
-				<label class="label" for="bedrooms">
-					<span class="label-text">الحد الأدنى لعدد غرف النوم: {minBedrooms}</span>
-				</label>
-				<input
-					id="bedrooms"
-					type="range"
-					min="0"
-					max="10"
-					class="range range-primary"
-					bind:value={minBedrooms}
-				/>
-			</div>
-
-			<!-- Bathrooms Filter -->
-			<div class="form-control w-full">
-				<label class="label" for="bathrooms">
-					<span class="label-text">الحد الأدنى لعدد الحمامات: {minBathrooms}</span>
-				</label>
-				<input
-					id="bathrooms"
-					type="range"
-					min="0"
-					max="5"
-					class="range range-primary"
-					bind:value={minBathrooms}
-				/>
-			</div>
+		<div class="text-sm text-base-content/70">
+			{filteredListings.length} عقار
 		</div>
 	</div>
 
-	<!-- Listings Count -->
-	<div class="mb-4">
-		<p class="text-sm text-base-content/70">
-			عدد النتائج: {filteredListings.length}
-		</p>
-	</div>
+	<!-- Filters Drawer -->
+	{#if showFilters}
+		<!-- Overlay -->
+		<div
+			class="fixed inset-0 z-40 bg-black/50"
+			onclick={() => (showFilters = false)}
+			role="button"
+			tabindex="-1"
+		></div>
+		<!-- Drawer Panel -->
+		<div class="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-base-100 shadow-xl">
+			<div class="flex h-full flex-col">
+				<!-- Header -->
+				<div class="flex items-center justify-between border-b border-base-300 p-4">
+					<h2 class="text-xl font-bold">تصفية النتائج</h2>
+					<button
+						onclick={() => (showFilters = false)}
+						class="btn btn-circle btn-ghost btn-sm"
+						aria-label="إغلاق"
+					>
+						<X size={20} />
+					</button>
+				</div>
+
+				<!-- Filters Content -->
+				<div class="flex-1 space-y-4 overflow-y-auto p-4">
+					<!-- Town Filter -->
+					<div class="form-control w-full">
+						<label class="label" for="town-select">
+							<span class="label-text font-semibold">المنطقة</span>
+						</label>
+						<select
+							id="town-select"
+							class="select-bordered select w-full"
+							bind:value={selectedTown}
+						>
+							<option value="">جميع المناطق</option>
+							{#each data.towns as town (town)}
+								<option value={town}>{getTownNameArabic(town)}</option>
+							{/each}
+						</select>
+					</div>
+
+					<!-- Price Range -->
+					<div class="form-control w-full">
+						<label class="label" for="min-price">
+							<span class="label-text font-semibold">الحد الأدنى للسعر</span>
+						</label>
+						<input
+							id="min-price"
+							type="number"
+							placeholder="0"
+							class="input-bordered input w-full"
+							bind:value={minPrice}
+						/>
+					</div>
+
+					<div class="form-control w-full">
+						<label class="label" for="max-price">
+							<span class="label-text font-semibold">الحد الأقصى للسعر</span>
+						</label>
+						<input
+							id="max-price"
+							type="number"
+							placeholder="10000000"
+							class="input-bordered input w-full"
+							bind:value={maxPrice}
+						/>
+					</div>
+
+					<!-- Bedrooms Filter -->
+					<div class="form-control w-full">
+						<label class="label" for="bedrooms">
+							<span class="label-text font-semibold">الحد الأدنى لعدد غرف النوم: {minBedrooms}</span
+							>
+						</label>
+						<input
+							id="bedrooms"
+							type="range"
+							min="0"
+							max="10"
+							class="range range-primary"
+							bind:value={minBedrooms}
+						/>
+						<div class="flex w-full justify-between px-2 text-xs">
+							<span>0</span>
+							<span>5</span>
+							<span>10</span>
+						</div>
+					</div>
+
+					<!-- Bathrooms Filter -->
+					<div class="form-control w-full">
+						<label class="label" for="bathrooms">
+							<span class="label-text font-semibold">الحد الأدنى لعدد الحمامات: {minBathrooms}</span
+							>
+						</label>
+						<input
+							id="bathrooms"
+							type="range"
+							min="0"
+							max="5"
+							class="range range-primary"
+							bind:value={minBathrooms}
+						/>
+						<div class="flex w-full justify-between px-2 text-xs">
+							<span>0</span>
+							<span>2</span>
+							<span>5</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Footer Actions -->
+				<div class="border-t border-base-300 p-4">
+					<div class="flex gap-2">
+						<button onclick={resetFilters} class="btn flex-1 btn-ghost"> إعادة تعيين </button>
+						<button onclick={() => (showFilters = false)} class="btn flex-1 btn-primary">
+							تطبيق
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{/if}
 
 	<!-- Listings Grid -->
 	<div class="grid grid-cols-1 gap-4">
@@ -224,7 +362,7 @@
 						<!-- Town -->
 						<p class="flex items-center gap-1 text-sm text-base-content/80">
 							<Home size={16} />
-							{listing.town}
+							{getTownNameArabic(listing.town)}
 						</p>
 
 						<!-- Property Details -->

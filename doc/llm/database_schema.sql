@@ -42,10 +42,9 @@ CREATE TABLE public.house_listings (
   CONSTRAINT house_listings_pkey PRIMARY KEY (id),
   CONSTRAINT house_listing_author_fkey FOREIGN KEY (author) REFERENCES public.users(id)
 );
-CREATE TABLE public.listing_to_pic (
-  listing_id bigint NOT NULL,
-  pic_id uuid NOT NULL,
-  CONSTRAINT listing_to_pic_pkey PRIMARY KEY (listing_id, pic_id),
-  CONSTRAINT listing_to_pic_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES public.house_listings(id),
-  CONSTRAINT listing_to_pic_pic_id_fkey FOREIGN KEY (pic_id) REFERENCES storage.objects(id)
+create table public.listing_to_pic (
+  listing_id bigint not null,
+  pic_name text not null,
+  constraint listing_to_pic_pkey primary key (listing_id, pic_name),
+  constraint listing_to_pic_listing_id_fkey foreign KEY (listing_id) references house_listings (id) on update CASCADE on delete CASCADE
 );

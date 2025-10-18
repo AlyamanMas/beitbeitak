@@ -1,0 +1,2 @@
+- perhaps filter with supabase instead of locally?
+- pagination

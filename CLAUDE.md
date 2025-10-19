@@ -12,3 +12,5 @@ Your task is to help the user complete the app's development. Please note the fo
 - There are some documentation for you under the /doc/llm/ directory. Specifically, you can see the SQL code for the `public` Supabase schema in a file there called @doc/llm/database_schema.sql
 - Feel free to add more documentation for yourself in /doc/llm/. Do not modify this file (the CLAUDE.md file at the project root dir) unless told to by the user.
 - Since you do not have access to Supabase, when you believe you need to make changes to the schema or if that is the optimal solution, stop everything you are doing and tell me that. Do not try to do hacky work arounds instead; although you should preferrably do stuff on the client side when possible.
+- Do not overuse cards, especially for showing just one instance of an object. You could use them in certain contexts when it makes sense like showing a grid of listings...
+- When interacting with me (the developer) always speak English. Only use Arabic for user-facing UI in the web app.

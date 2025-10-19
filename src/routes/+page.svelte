@@ -1,10 +1,24 @@
 <script>
 	import { supabase } from '$lib/supabaseClient.js';
 	import { getTownNameArabic } from '$lib/towns.js';
-	import { Home, Bed, Bath, Maximize, SlidersHorizontal, X } from 'lucide-svelte';
+	import { isAuthenticated } from '$lib/stores/authStore.svelte.js';
+	import { goto } from '$app/navigation';
+	import { Home, Bed, Bath, Maximize, SlidersHorizontal, X, Plus } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
+
+	/**
+	 * Handle add listing button click
+	 */
+	function handleAddListing() {
+		if (!isAuthenticated()) {
+			goto('/auth/login');
+		} else {
+			// TODO: Navigate to add listing page when implemented
+			alert('سيتم إضافة صفحة إضافة إعلان قريباً');
+		}
+	}
 
 	// Filter states
 	let showFilters = $state(false);
@@ -75,7 +89,7 @@
 	}
 </script>
 
-<div class="min-h-screen bg-base-200 p-4" dir="rtl">
+<div class="min-h-screen bg-base-200 p-4 pb-24" dir="rtl">
 	<!-- Header -->
 	<div class="mb-4">
 		<h1 class="mb-2 text-center text-3xl font-bold">بيت بيتك</h1>
@@ -97,6 +111,7 @@
 				{#if showTownFilter}
 					<!-- Dropdown overlay to close on outside click -->
 					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
 					<div
 						class="fixed inset-0 z-10"
 						onclick={() => (showTownFilter = false)}
@@ -154,14 +169,16 @@
 	<!-- Filters Drawer -->
 	{#if showFilters}
 		<!-- Overlay -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
-			class="fixed inset-0 z-40 bg-black/50"
+			class="fixed inset-0 z-[60] bg-black/50"
 			onclick={() => (showFilters = false)}
 			role="button"
 			tabindex="-1"
 		></div>
 		<!-- Drawer Panel -->
-		<div class="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-base-100 shadow-xl">
+		<div class="fixed inset-y-0 right-0 z-[70] w-full max-w-sm bg-base-100 shadow-xl">
 			<div class="flex h-full flex-col">
 				<!-- Header -->
 				<div class="flex items-center justify-between border-b border-base-300 p-4">
@@ -394,4 +411,17 @@
 			</div>
 		{/each}
 	</div>
+
+	<!-- FAB Button for Adding Listings -->
+	{#if !showFilters}
+		<div class="fab" style="bottom: 5rem;">
+			<button
+				onclick={handleAddListing}
+				class="btn btn-circle btn-lg btn-primary"
+				aria-label="إضافة إعلان"
+			>
+				<Plus size={28} />
+			</button>
+		</div>
+	{/if}
 </div>

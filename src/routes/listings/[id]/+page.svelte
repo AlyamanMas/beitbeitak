@@ -105,7 +105,7 @@
 	}
 </script>
 
-<div class="min-h-screen bg-base-200" dir="rtl">
+<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
 	<!-- Back Button -->
 	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
 		<a href="/" class="btn gap-2 btn-ghost btn-sm">
@@ -118,10 +118,11 @@
 	{#if data.listing.listing_to_pic && data.listing.listing_to_pic.length > 0}
 		<div class="relative bg-black">
 			<div class="aspect-video w-full">
+				<!-- TODO: add page for image viewing when clicking on it -->
 				<img
 					src={getImageUrl(data.listing.listing_to_pic[currentImageIndex].pic_name)}
 					alt="صورة العقار"
-					class="h-full w-full object-contain"
+					class="h-full w-full"
 				/>
 			</div>
 
@@ -129,14 +130,14 @@
 			{#if data.listing.listing_to_pic.length > 1}
 				<button
 					onclick={previousImage}
-					class="btn absolute top-1/2 left-2 btn-circle -translate-y-1/2 border-none bg-black/50 text-white btn-sm hover:bg-black/70"
+					class="btn absolute top-1/2 right-2 btn-circle -translate-y-1/2 border-none bg-black/50 text-white btn-sm hover:bg-black/70"
 					aria-label="الصورة السابقة"
 				>
 					<ChevronRight size={20} />
 				</button>
 				<button
 					onclick={nextImage}
-					class="btn absolute top-1/2 right-2 btn-circle -translate-y-1/2 border-none bg-black/50 text-white btn-sm hover:bg-black/70"
+					class="btn absolute top-1/2 left-2 btn-circle -translate-y-1/2 border-none bg-black/50 text-white btn-sm hover:bg-black/70"
 					aria-label="الصورة التالية"
 				>
 					<ChevronRight size={20} class="rotate-180" />

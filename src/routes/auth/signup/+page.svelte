@@ -1,6 +1,7 @@
 <script>
 	import { signUp, isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 
 	let email = $state('');
@@ -14,7 +15,7 @@
 	// Redirect if already authenticated
 	onMount(() => {
 		if (isAuthenticated()) {
-			goto('/');
+			goto(resolve('/'));
 		}
 	});
 
@@ -50,7 +51,7 @@
 			loading = false;
 		} else {
 			// Redirect to home on success
-			goto('/');
+			goto(resolve('/'));
 		}
 	}
 </script>
@@ -173,7 +174,7 @@
 				<div class="text-center">
 					<p class="text-sm">
 						لديك حساب بالفعل؟
-						<a href="/auth/login" class="link-primary link font-semibold">
+						<a href={resolve('/auth/login')} class="link-primary link font-semibold">
 							تسجيل الدخول
 						</a>
 					</p>

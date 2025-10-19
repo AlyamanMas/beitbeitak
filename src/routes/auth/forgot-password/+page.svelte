@@ -1,5 +1,6 @@
 <script>
 	import { resetPassword } from '$lib/stores/authStore.svelte.js';
+	import { resolve } from '$app/paths';
 	import { ArrowRight } from 'lucide-svelte';
 
 	let email = $state('');
@@ -44,7 +45,7 @@
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body">
 				<!-- Back Button -->
-				<a href="/auth/login" class="btn btn-ghost btn-sm mb-2 self-start">
+				<a href={resolve('/auth/login')} class="btn btn-ghost btn-sm mb-2 self-start">
 					<ArrowRight size={20} />
 					العودة إلى تسجيل الدخول
 				</a>

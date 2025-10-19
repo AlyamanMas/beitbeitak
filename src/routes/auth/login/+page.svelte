@@ -2,6 +2,7 @@
 <script>
 	import { signIn, isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 
 	let email = $state('');
@@ -12,7 +13,7 @@
 	// Redirect if already authenticated
 	onMount(() => {
 		if (isAuthenticated()) {
-			goto('/');
+			goto(resolve('/'));
 		}
 	});
 
@@ -38,7 +39,7 @@
 			loading = false;
 		} else {
 			// Redirect to home on success
-			goto('/');
+			goto(resolve('/'));
 		}
 	}
 </script>
@@ -102,7 +103,7 @@
 
 					<!-- Forgot Password Link -->
 					<div class="mt-2 text-left">
-						<a href="/auth/forgot-password" class="link text-sm link-primary">
+						<a href={resolve('/auth/forgot-password')} class="link text-sm link-primary">
 							نسيت كلمة المرور؟
 						</a>
 					</div>
@@ -125,7 +126,7 @@
 				<div class="text-center">
 					<p class="text-sm">
 						ليس لديك حساب؟
-						<a href="/auth/signup" class="link font-semibold link-primary"> إنشاء حساب جديد </a>
+						<a href={resolve('/auth/signup')} class="link font-semibold link-primary"> إنشاء حساب جديد </a>
 					</p>
 				</div>
 			</div>

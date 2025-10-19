@@ -3,6 +3,7 @@
 	import { getTownNameArabic, townNamesArabic } from '$lib/towns.js';
 	import { getUser, isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { Upload, X, Plus, ArrowRight, Loader } from 'lucide-svelte';
 
@@ -12,7 +13,7 @@
 	// Check authentication
 	onMount(() => {
 		if (!isAuthenticated()) {
-			goto('/auth/login');
+			goto(resolve('/auth/login'));
 		}
 	});
 
@@ -166,7 +167,7 @@
 			}
 
 			// Success! Redirect to home page
-			goto('/');
+			goto(resolve('/'));
 		} catch (error) {
 			console.error('Error creating listing:', error);
 			errorMessage = `حدث خطأ أثناء إنشاء الإعلان: ${error.message}`;
@@ -180,7 +181,7 @@
 	<!-- Header -->
 	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
 		<div class="flex items-center gap-3">
-			<a href="/" class="btn btn-circle btn-ghost btn-sm">
+			<a href={resolve('/')} class="btn btn-circle btn-ghost btn-sm">
 				<ArrowRight size={20} />
 			</a>
 			<h1 class="text-xl font-bold">إضافة إعلان جديد</h1>

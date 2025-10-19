@@ -3,6 +3,7 @@
 	import { getTownNameArabic } from '$lib/towns.js';
 	import { isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { Home, Bed, Bath, Maximize, ArrowRight, Plus } from 'lucide-svelte';
 
@@ -12,7 +13,7 @@
 	// Check authentication
 	onMount(() => {
 		if (!isAuthenticated()) {
-			goto('/auth/login');
+			goto(resolve('/auth/login'));
 		}
 	});
 
@@ -43,12 +44,12 @@
 	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
 		<div class="flex items-center justify-between">
 			<div class="flex items-center gap-3">
-				<a href="/profile" class="btn btn-circle btn-ghost btn-sm">
+				<a href={resolve('/profile')} class="btn btn-circle btn-ghost btn-sm">
 					<ArrowRight size={20} />
 				</a>
 				<h1 class="text-xl font-bold">إعلاناتي</h1>
 			</div>
-			<a href="/listings/new" class="btn gap-2 btn-primary btn-sm">
+			<a href={resolve('/listings/new')} class="btn gap-2 btn-primary btn-sm">
 				<Plus size={16} />
 				إضافة إعلان
 			</a>
@@ -63,7 +64,7 @@
 					<Home size={64} class="mx-auto text-base-content/30" />
 				</div>
 				<p class="text-lg text-base-content/60 mb-4">لم تقم بنشر أي إعلانات بعد</p>
-				<a href="/listings/new" class="btn btn-primary gap-2">
+				<a href={resolve('/listings/new')} class="btn btn-primary gap-2">
 					<Plus size={20} />
 					إضافة إعلان جديد
 				</a>
@@ -72,7 +73,7 @@
 			<div class="grid grid-cols-1 gap-4">
 				{#each data.listings as listing (listing.id)}
 					<a
-						href="/listings/{listing.id}"
+						href={resolve(`/listings/${listing.id}`)}
 						class="card bg-base-100 shadow-md transition-shadow hover:shadow-lg"
 					>
 						<div class="card-body p-4">

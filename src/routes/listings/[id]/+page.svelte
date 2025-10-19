@@ -2,6 +2,7 @@
 	import { supabase } from '$lib/supabaseClient.js';
 	import { getTownNameArabic } from '$lib/towns.js';
 	import { getUser, isAuthenticated } from '$lib/stores/authStore.svelte.js';
+	import { resolve } from '$app/paths';
 	import {
 		Home,
 		Bed,
@@ -120,7 +121,7 @@
 <div class="min-h-screen bg-base-200 pb-24" dir="rtl">
 	<!-- Back Button -->
 	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
-		<a href="/" class="btn gap-2 btn-ghost btn-sm">
+		<a href={resolve('/')} class="btn gap-2 btn-ghost btn-sm">
 			<ArrowRight size={20} />
 			العودة إلى القائمة
 		</a>
@@ -360,7 +361,7 @@
 		{#if isOwner()}
 			<div class="card bg-base-100 shadow-md">
 				<div class="card-body p-4">
-					<a href="/listings/{data.listing.id}/edit" class="btn btn-outline w-full gap-2">
+					<a href={resolve(`/listings/${data.listing.id}/edit`)} class="btn btn-outline w-full gap-2">
 						<Edit size={20} />
 						تعديل الإعلان
 					</a>

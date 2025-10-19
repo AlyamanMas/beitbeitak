@@ -1,6 +1,7 @@
 <script>
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { Home, User } from 'lucide-svelte';
 	import {
 		isAuthenticated,
@@ -13,9 +14,9 @@
 	 */
 	function handleProfileClick() {
 		if (isAuthenticated()) {
-			goto('/profile');
+			goto(resolve('/profile'));
 		} else {
-			goto('/auth/login');
+			goto(resolve('/auth/login'));
 		}
 	}
 
@@ -27,7 +28,7 @@
 
 <div class="dock fixed right-0 bottom-0 left-0 z-50 border-t border-base-300 bg-base-100" dir="rtl">
 	<!-- Home -->
-	<a href="/" class={currentPath === '/' ? 'dock-active' : ''}>
+	<a href={resolve('/')} class={currentPath === '/' ? 'dock-active' : ''}>
 		<Home size={24} />
 		<span class="dock-label">الرئيسية</span>
 	</a>

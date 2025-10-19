@@ -3,6 +3,7 @@
 	import { getTownNameArabic } from '$lib/towns.js';
 	import { isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { Home, Bed, Bath, Maximize, SlidersHorizontal, X, Plus } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageProps} */
@@ -13,9 +14,9 @@
 	 */
 	function handleAddListing() {
 		if (!isAuthenticated()) {
-			goto('/auth/login');
+			goto(resolve('/auth/login'));
 		} else {
-			goto('/listings/new');
+			goto(resolve('/listings/new'));
 		}
 	}
 
@@ -297,7 +298,7 @@
 	<div class="grid grid-cols-1 gap-4">
 		{#each filteredListings as listing (listing.id)}
 			<a
-				href="/listings/{listing.id}"
+				href={resolve(`/listings/${listing.id}`)}
 				class="card bg-base-100 shadow-md transition-shadow hover:shadow-lg"
 			>
 				<div class="card-body p-4">

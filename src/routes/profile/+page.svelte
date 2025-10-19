@@ -7,6 +7,7 @@
 		signOut
 	} from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { User, Mail, LogOut, Home, Edit } from 'lucide-svelte';
 
@@ -15,7 +16,7 @@
 	// Redirect if not authenticated
 	onMount(() => {
 		if (!isAuthenticated()) {
-			goto('/auth/login');
+			goto(resolve('/auth/login'));
 		} else {
 			loading = false;
 		}
@@ -26,7 +27,7 @@
 	 */
 	async function handleLogout() {
 		await signOut();
-		goto('/');
+		goto(resolve('/'));
 	}
 
 	// Reactive getters for user and profile data
@@ -95,13 +96,13 @@
 			<!-- Actions -->
 			<div class="space-y-2">
 				<!-- Edit Profile Button -->
-				<a href="/profile/edit" class="btn btn-outline w-full gap-2">
+				<a href={resolve('/profile/edit')} class="btn btn-outline w-full gap-2">
 					<Edit size={20} />
 					تعديل الملف الشخصي
 				</a>
 
 				<!-- My Listings Button -->
-				<a href="/profile/listings" class="btn btn-primary w-full gap-2">
+				<a href={resolve('/profile/listings')} class="btn btn-primary w-full gap-2">
 					<Home size={20} />
 					إعلاناتي
 				</a>

@@ -2,6 +2,7 @@
 	import { supabase } from '$lib/supabaseClient.js';
 	import { getTownNameArabic, townNamesArabic } from '$lib/towns.js';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { Upload, X, Save, ArrowRight, Loader, Trash2 } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageProps} */
@@ -213,7 +214,7 @@
 			}
 
 			// Success! Redirect to listing page
-			goto(`/listings/${data.listing.id}`);
+			goto(resolve(`/listings/${data.listing.id}`));
 		} catch (error) {
 			console.error('Error updating listing:', error);
 			errorMessage = `حدث خطأ أثناء تحديث الإعلان: ${error.message}`;
@@ -227,7 +228,7 @@
 	<!-- Header -->
 	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
 		<div class="flex items-center gap-3">
-			<a href="/listings/{data.listing.id}" class="btn btn-circle btn-ghost btn-sm">
+			<a href={resolve(`/listings/${data.listing.id}`)} class="btn btn-circle btn-ghost btn-sm">
 				<ArrowRight size={20} />
 			</a>
 			<h1 class="text-xl font-bold">تعديل الإعلان</h1>

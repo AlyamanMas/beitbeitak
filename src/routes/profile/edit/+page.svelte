@@ -8,6 +8,7 @@
 		refreshProfileData
 	} from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { User, Upload, X, Save, ArrowRight, Loader, Trash2, Camera } from 'lucide-svelte';
 
@@ -19,7 +20,7 @@
 	// Check authentication
 	onMount(() => {
 		if (!isAuthenticated()) {
-			goto('/auth/login');
+			goto(resolve('/auth/login'));
 		} else {
 			loading = false;
 		}
@@ -181,7 +182,7 @@
 
 			// Redirect after a short delay
 			setTimeout(() => {
-				goto('/profile');
+				goto(resolve('/profile'));
 			}, 1500);
 		} catch (error) {
 			console.error('Error updating profile:', error);
@@ -201,7 +202,7 @@
 		<!-- Header -->
 		<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
 			<div class="flex items-center gap-3">
-				<a href="/profile" class="btn btn-circle btn-ghost btn-sm">
+				<a href={resolve('/profile')} class="btn btn-circle btn-ghost btn-sm">
 					<ArrowRight size={20} />
 				</a>
 				<h1 class="text-xl font-bold">تعديل الملف الشخصي</h1>

@@ -1,6 +1,9 @@
 import { supabase } from '$lib/supabaseClient.js';
 import { error } from '@sveltejs/kit';
 
+// Disable prerendering for dynamic route
+export const prerender = false;
+
 /**
  * @typedef {Object} HouseListing
  * @property {number} id

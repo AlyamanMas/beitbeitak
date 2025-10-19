@@ -1,2 +1,2 @@
-// Enable prerendering for all pages
-export const prerender = true;
+// Disable SSR for client-side only app
+export const ssr = false;

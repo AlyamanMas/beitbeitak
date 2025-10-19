@@ -1,5 +1,8 @@
 import { supabase } from '$lib/supabaseClient.js';
 
+// Disable prerendering for authenticated route
+export const prerender = false;
+
 /** @type {import('./$types').PageLoad} */
 export async function load() {
 	// Get current user

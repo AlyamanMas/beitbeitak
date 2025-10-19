@@ -1,6 +1,9 @@
 import { supabase } from '$lib/supabaseClient.js';
 import { error, redirect } from '@sveltejs/kit';
 
+// Disable prerendering for dynamic, authenticated route
+export const prerender = false;
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
 	const { id } = params;

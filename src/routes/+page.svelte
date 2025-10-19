@@ -15,8 +15,7 @@
 		if (!isAuthenticated()) {
 			goto('/auth/login');
 		} else {
-			// TODO: Navigate to add listing page when implemented
-			alert('سيتم إضافة صفحة إضافة إعلان قريباً');
+			goto('/listings/new');
 		}
 	}
 

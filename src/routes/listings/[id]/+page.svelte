@@ -1,6 +1,7 @@
 <script>
 	import { supabase } from '$lib/supabaseClient.js';
 	import { getTownNameArabic } from '$lib/towns.js';
+	import { getUser, isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import {
 		Home,
 		Bed,
@@ -12,13 +13,24 @@
 		User,
 		ExternalLink,
 		ChevronRight,
-		ArrowRight
+		ArrowRight,
+		Edit
 	} from 'lucide-svelte';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
 
 	let currentImageIndex = $state(0);
+
+	/**
+	 * Check if the current user is the author of this listing
+	 * @returns {boolean}
+	 */
+	let isOwner = $derived(() => {
+		if (!isAuthenticated()) return false;
+		const user = getUser();
+		return user?.id === data.listing.author;
+	});
 
 	/**
 	 * Get public URL for an image from Supabase storage
@@ -343,5 +355,17 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Edit Button (only for listing owner) -->
+		{#if isOwner()}
+			<div class="card bg-base-100 shadow-md">
+				<div class="card-body p-4">
+					<a href="/listings/{data.listing.id}/edit" class="btn btn-outline w-full gap-2">
+						<Edit size={20} />
+						تعديل الإعلان
+					</a>
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>

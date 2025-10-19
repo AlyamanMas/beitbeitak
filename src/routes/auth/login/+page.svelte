@@ -1,3 +1,4 @@
+<!-- TODO: add button to return to main page -->
 <script>
 	import { signIn, isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
@@ -30,9 +31,10 @@
 		const { error: signInError } = await signIn(email, password);
 
 		if (signInError) {
-			error = signInError.message === 'Invalid login credentials'
-				? 'بيانات الدخول غير صحيحة'
-				: 'حدث خطأ أثناء تسجيل الدخول';
+			error =
+				signInError.message === 'Invalid login credentials'
+					? 'بيانات الدخول غير صحيحة'
+					: 'حدث خطأ أثناء تسجيل الدخول';
 			loading = false;
 		} else {
 			// Redirect to home on success
@@ -52,15 +54,20 @@
 		<!-- Login Form -->
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body">
-				<h2 class="card-title mb-4 text-2xl">تسجيل الدخول</h2>
+				<h2 class="mb-4 card-title text-2xl">تسجيل الدخول</h2>
 
 				{#if error}
-					<div class="alert alert-error mb-4">
+					<div class="mb-4 alert alert-error">
 						<span>{error}</span>
 					</div>
 				{/if}
 
-				<form onsubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+				<form
+					onsubmit={(e) => {
+						e.preventDefault();
+						handleLogin();
+					}}
+				>
 					<!-- Email -->
 					<div class="form-control w-full">
 						<label class="label" for="email">
@@ -95,14 +102,14 @@
 
 					<!-- Forgot Password Link -->
 					<div class="mt-2 text-left">
-						<a href="/auth/forgot-password" class="link-primary link text-sm">
+						<a href="/auth/forgot-password" class="link text-sm link-primary">
 							نسيت كلمة المرور؟
 						</a>
 					</div>
 
 					<!-- Submit Button -->
 					<div class="form-control mt-6">
-						<button type="submit" class="btn btn-primary w-full" disabled={loading}>
+						<button type="submit" class="btn w-full btn-primary" disabled={loading}>
 							{#if loading}
 								<span class="loading loading-spinner"></span>
 								جاري تسجيل الدخول...
@@ -118,9 +125,7 @@
 				<div class="text-center">
 					<p class="text-sm">
 						ليس لديك حساب؟
-						<a href="/auth/signup" class="link-primary link font-semibold">
-							إنشاء حساب جديد
-						</a>
+						<a href="/auth/signup" class="link font-semibold link-primary"> إنشاء حساب جديد </a>
 					</p>
 				</div>
 			</div>

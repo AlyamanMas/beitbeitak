@@ -2,7 +2,7 @@
 	import { isAuthenticated, getUser, getProfileData, signOut } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { User, Mail, LogOut } from 'lucide-svelte';
+	import { User, Mail, LogOut, Home } from 'lucide-svelte';
 
 	let loading = $state(true);
 
@@ -79,6 +79,12 @@
 
 			<!-- Actions -->
 			<div class="space-y-2">
+				<!-- My Listings Button -->
+				<a href="/profile/listings" class="btn btn-primary w-full gap-2">
+					<Home size={20} />
+					إعلاناتي
+				</a>
+
 				<!-- Logout Button -->
 				<button onclick={handleLogout} class="btn btn-error w-full gap-2">
 					<LogOut size={20} />

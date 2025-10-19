@@ -1,8 +1,14 @@
 <script>
-	import { isAuthenticated, getUser, getProfileData, signOut } from '$lib/stores/authStore.svelte.js';
+	import {
+		isAuthenticated,
+		getUser,
+		getProfileData,
+		getProfilePicUrl,
+		signOut
+	} from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { User, Mail, LogOut, Home } from 'lucide-svelte';
+	import { User, Mail, LogOut, Home, Edit } from 'lucide-svelte';
 
 	let loading = $state(true);
 
@@ -26,6 +32,7 @@
 	// Reactive getters for user and profile data
 	let user = $derived(getUser());
 	let profileData = $derived(getProfileData());
+	let profilePicUrl = $derived(getProfilePicUrl());
 </script>
 
 {#if loading}
@@ -45,10 +52,18 @@
 				<!-- Avatar Section -->
 				<div class="mb-6 flex items-center justify-center">
 					<div class="avatar placeholder">
-						<div class="w-24 rounded-full bg-primary text-primary-content flex items-center justify-center">
-							<span class="text-3xl">
-								{profileData?.first_name?.[0] || 'م'}{profileData?.last_name?.[0] || 'أ'}
-							</span>
+						<div
+							class="w-24 rounded-full {profilePicUrl
+								? 'ring ring-primary ring-offset-2 ring-offset-base-100'
+								: 'bg-primary text-primary-content'} flex items-center justify-center"
+						>
+							{#if profilePicUrl}
+								<img src={profilePicUrl} alt="الصورة الشخصية" />
+							{:else}
+								<span class="text-3xl">
+									{profileData?.first_name?.[0] || 'م'}{profileData?.last_name?.[0] || 'أ'}
+								</span>
+							{/if}
 						</div>
 					</div>
 				</div>
@@ -79,6 +94,12 @@
 
 			<!-- Actions -->
 			<div class="space-y-2">
+				<!-- Edit Profile Button -->
+				<a href="/profile/edit" class="btn btn-outline w-full gap-2">
+					<Edit size={20} />
+					تعديل الملف الشخصي
+				</a>
+
 				<!-- My Listings Button -->
 				<a href="/profile/listings" class="btn btn-primary w-full gap-2">
 					<Home size={20} />

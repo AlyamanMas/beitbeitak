@@ -57,6 +57,14 @@ async function loadProfileData() {
 }
 
 /**
+ * Refresh user profile data
+ * Call this after updating profile information
+ */
+export async function refreshProfileData() {
+	await loadProfileData();
+}
+
+/**
  * Sign up a new user with email and password
  * @param {string} email
  * @param {string} password
@@ -173,9 +181,7 @@ export function getProfileData() {
 export function getProfilePicUrl() {
 	if (!profileData?.profile_pic) return null;
 
-	// Get the path from storage.objects using the profile_pic id
-	// Since we can't query storage.objects directly from the client,
-	// we'll use the id as the path directly
+	// Get the public URL using the profile_pic path
 	const { data } = supabase.storage.from('profile_pics').getPublicUrl(profileData.profile_pic);
 	return data?.publicUrl ?? null;
 }

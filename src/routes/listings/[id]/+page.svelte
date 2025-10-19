@@ -122,7 +122,7 @@
 				<img
 					src={getImageUrl(data.listing.listing_to_pic[currentImageIndex].pic_name)}
 					alt="صورة العقار"
-					class="h-full w-full"
+					class="h-full w-full object-cover"
 				/>
 			</div>
 

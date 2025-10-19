@@ -1,33 +1,34 @@
+/*! 🌼 daisyUI 5.3.7 */
 <script>
-	import { supabase } from '$lib/supabaseClient.js';
-	import { getTownNameArabic } from '$lib/towns.js';
-	import { isAuthenticated } from '$lib/stores/authStore.svelte.js';
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
-	import { Home, Bed, Bath, Maximize, SlidersHorizontal, X, Plus } from 'lucide-svelte';
+	import { supabase } from '$lib/supabaseClient.js'
+	import { getTownNameArabic } from '$lib/towns.js'
+	import { isAuthenticated } from '$lib/stores/authStore.svelte.js'
+	import { goto } from '$app/navigation'
+	import { resolve } from '$app/paths'
+	import { Home, Bed, Bath, Maximize, SlidersHorizontal, X, Plus } from 'lucide-svelte'
 
 	/** @type {import('./$types').PageProps} */
-	let { data } = $props();
+	let { data } = $props()
 
 	/**
 	 * Handle add listing button click
 	 */
 	function handleAddListing() {
 		if (!isAuthenticated()) {
-			goto(resolve('/auth/login'));
+			goto(resolve('/auth/login'))
 		} else {
-			goto(resolve('/listings/new'));
+			goto(resolve('/listings/new'))
 		}
 	}
 
 	// Filter states
-	let showFilters = $state(false);
-	let showTownFilter = $state(false);
-	let selectedTown = $state('');
-	let minPrice = $state(0);
-	let maxPrice = $state(10000000);
-	let minBedrooms = $state(0);
-	let minBathrooms = $state(0);
+	let showFilters = $state(false)
+	let showTownFilter = $state(false)
+	let selectedTown = $state('')
+	let minPrice = $state(0)
+	let maxPrice = $state(10000000)
+	let minBedrooms = $state(0)
+	let minBathrooms = $state(0)
 
 	/**
 	 * Get public URL for an image from Supabase storage
@@ -35,8 +36,8 @@
 	 * @returns {string}
 	 */
 	function getImageUrl(picName) {
-		const { data } = supabase.storage.from('house_pics').getPublicUrl(picName);
-		return data.publicUrl;
+		const { data } = supabase.storage.from('house_pics').getPublicUrl(picName)
+		return data.publicUrl
 	}
 
 	/**
@@ -45,13 +46,13 @@
 	 */
 	let filteredListings = $derived(
 		data.listings.filter((listing) => {
-			if (selectedTown && listing.town !== selectedTown) return false;
-			if (listing.rent_per_month < minPrice || listing.rent_per_month > maxPrice) return false;
-			if (listing.num_bedrooms < minBedrooms) return false;
-			if (listing.num_bathrooms < minBathrooms) return false;
-			return true;
+			if (selectedTown && listing.town !== selectedTown) return false
+			if (listing.rent_per_month < minPrice || listing.rent_per_month > maxPrice) return false
+			if (listing.num_bedrooms < minBedrooms) return false
+			if (listing.num_bathrooms < minBathrooms) return false
+			return true
 		})
-	);
+	)
 
 	/**
 	 * Format price with currency
@@ -60,8 +61,8 @@
 	 * @returns {string}
 	 */
 	function formatPrice(price, isUsd) {
-		const formatted = price.toLocaleString('ar-SY');
-		return isUsd ? `$${formatted}` : `${formatted} ل.س`;
+		const formatted = price.toLocaleString('ar-SY')
+		return isUsd ? `$${formatted}` : `${formatted} ل.س`
 	}
 
 	/**
@@ -69,30 +70,30 @@
 	 * @returns {number}
 	 */
 	let activeFiltersCount = $derived(() => {
-		let count = 0;
-		if (minPrice > 0) count++;
-		if (maxPrice < 10000000) count++;
-		if (minBedrooms > 0) count++;
-		if (minBathrooms > 0) count++;
-		return count;
-	});
+		let count = 0
+		if (minPrice > 0) count++
+		if (maxPrice < 10000000) count++
+		if (minBedrooms > 0) count++
+		if (minBathrooms > 0) count++
+		return count
+	})
 
 	/**
 	 * Reset all filters
 	 */
 	function resetFilters() {
-		selectedTown = '';
-		minPrice = 0;
-		maxPrice = 10000000;
-		minBedrooms = 0;
-		minBathrooms = 0;
+		selectedTown = ''
+		minPrice = 0
+		maxPrice = 10000000
+		minBedrooms = 0
+		minBathrooms = 0
 	}
 </script>
 
 <div class="min-h-screen bg-base-200 p-4 pb-24" dir="rtl">
 	<!-- Header -->
 	<div class="mb-4">
-		<h1 class="mb-2 text-center text-3xl font-bold">بيت بيتك</h1>
+		<h1 class="mb-2 text-center text-3xl font-bold">البيت بيتك</h1>
 		<p class="text-center text-base-content/70">ابحث عن بيت أحلامك في حمص</p>
 	</div>
 
@@ -125,8 +126,8 @@
 							<li>
 								<button
 									onclick={() => {
-										selectedTown = '';
-										showTownFilter = false;
+										selectedTown = ''
+										showTownFilter = false
 									}}
 									class="text-right {selectedTown === '' ? 'active' : ''}"
 								>
@@ -137,8 +138,8 @@
 								<li>
 									<button
 										onclick={() => {
-											selectedTown = town;
-											showTownFilter = false;
+											selectedTown = town
+											showTownFilter = false
 										}}
 										class="text-right {selectedTown === town ? 'active' : ''}"
 									>

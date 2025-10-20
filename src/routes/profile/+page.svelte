@@ -38,7 +38,7 @@
 
 {#if loading}
 	<div class="flex min-h-screen items-center justify-center bg-base-200">
-		<span class="loading loading-spinner loading-lg"></span>
+		<span class="loading loading-lg loading-spinner"></span>
 	</div>
 {:else}
 	<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
@@ -49,10 +49,10 @@
 			</div>
 
 			<!-- Profile Card -->
-			<div class="mb-4 bg-base-100 p-6 rounded-lg shadow-md">
+			<div class="mb-4 rounded-lg bg-base-100 p-6 shadow-md">
 				<!-- Avatar Section -->
 				<div class="mb-6 flex items-center justify-center">
-					<div class="avatar placeholder">
+					<div class="placeholder avatar">
 						<div
 							class="w-24 rounded-full {profilePicUrl
 								? 'ring ring-primary ring-offset-2 ring-offset-base-100'
@@ -77,7 +77,8 @@
 						<div class="flex-1">
 							<p class="text-sm text-base-content/60">الاسم</p>
 							<p class="font-semibold">
-								{profileData?.first_name || ''} {profileData?.last_name || ''}
+								{profileData?.first_name || ''}
+								{profileData?.last_name || ''}
 							</p>
 						</div>
 					</div>
@@ -96,19 +97,19 @@
 			<!-- Actions -->
 			<div class="space-y-2">
 				<!-- Edit Profile Button -->
-				<a href={resolve('/profile/edit')} class="btn btn-outline w-full gap-2">
+				<a href={resolve('/profile/edit')} class="btn w-full gap-2 btn-outline">
 					<Edit size={20} />
 					تعديل الملف الشخصي
 				</a>
 
 				<!-- My Listings Button -->
-				<a href={resolve('/profile/listings')} class="btn btn-primary w-full gap-2">
+				<a href={resolve('/profile/listings')} class="btn w-full gap-2 btn-primary">
 					<Home size={20} />
 					إعلاناتي
 				</a>
 
 				<!-- Logout Button -->
-				<button onclick={handleLogout} class="btn btn-error w-full gap-2">
+				<button onclick={handleLogout} class="btn w-full gap-2 btn-error">
 					<LogOut size={20} />
 					تسجيل الخروج
 				</button>

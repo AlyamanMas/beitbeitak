@@ -361,7 +361,10 @@
 		{#if isOwner()}
 			<div class="card bg-base-100 shadow-md">
 				<div class="card-body p-4">
-					<a href={resolve(`/listings/${data.listing.id}/edit`)} class="btn btn-outline w-full gap-2">
+					<a
+						href={resolve(`/listings/${data.listing.id}/edit`)}
+						class="btn w-full gap-2 btn-outline"
+					>
 						<Edit size={20} />
 						تعديل الإعلان
 					</a>

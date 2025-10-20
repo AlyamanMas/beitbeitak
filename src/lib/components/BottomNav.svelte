@@ -45,7 +45,9 @@
 		{:else if isAuthenticated() && profileData}
 			<!-- User is authenticated but no profile picture - show initials -->
 			<div class="placeholder avatar">
-				<div class="w-8 rounded-full bg-primary text-primary-content flex items-center justify-center">
+				<div
+					class="flex w-8 items-center justify-center rounded-full bg-primary text-primary-content"
+				>
 					<span class="text-xs">
 						{profileData.first_name?.[0] || 'م'}{profileData.last_name?.[0] || 'أ'}
 					</span>
@@ -54,7 +56,7 @@
 		{:else}
 			<!-- User is not authenticated - show default icon -->
 			<div class="placeholder avatar">
-				<div class="w-8 rounded-full bg-base-300 flex items-center justify-center">
+				<div class="flex w-8 items-center justify-center rounded-full bg-base-300">
 					<User size={16} />
 				</div>
 			</div>

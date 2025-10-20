@@ -49,7 +49,7 @@
 				</a>
 				<h1 class="text-xl font-bold">إعلاناتي</h1>
 			</div>
-			<a href={resolve('/listings/new')} class="btn gap-2 btn-primary btn-sm">
+			<a href={resolve('/listings/new')} class="btn gap-2 btn-sm btn-primary">
 				<Plus size={16} />
 				إضافة إعلان
 			</a>
@@ -59,12 +59,12 @@
 	<!-- Listings -->
 	<div class="container mx-auto max-w-4xl p-4">
 		{#if data.listings.length === 0}
-			<div class="text-center py-12">
+			<div class="py-12 text-center">
 				<div class="mb-4">
 					<Home size={64} class="mx-auto text-base-content/30" />
 				</div>
-				<p class="text-lg text-base-content/60 mb-4">لم تقم بنشر أي إعلانات بعد</p>
-				<a href={resolve('/listings/new')} class="btn btn-primary gap-2">
+				<p class="mb-4 text-lg text-base-content/60">لم تقم بنشر أي إعلانات بعد</p>
+				<a href={resolve('/listings/new')} class="btn gap-2 btn-primary">
 					<Plus size={20} />
 					إضافة إعلان جديد
 				</a>

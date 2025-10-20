@@ -22,9 +22,7 @@
 
 	// Existing images from the listing
 	/** @type {Array<{pic_name: string}>} */
-	let existingImages = $state(
-		data.listing.listing_to_pic ? [...data.listing.listing_to_pic] : []
-	);
+	let existingImages = $state(data.listing.listing_to_pic ? [...data.listing.listing_to_pic] : []);
 
 	// New files to upload
 	/** @type {File[]} */
@@ -97,12 +95,10 @@
 			const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
 			const filePath = fileName;
 
-			const { data, error } = await supabase.storage
-				.from('house_pics')
-				.upload(filePath, file, {
-					cacheControl: '3600',
-					upsert: false
-				});
+			const { data, error } = await supabase.storage.from('house_pics').upload(filePath, file, {
+				cacheControl: '3600',
+				upsert: false
+			});
 
 			if (error) {
 				throw error;
@@ -399,7 +395,7 @@
 					<!-- Existing Images -->
 					{#if existingImages.length > 0}
 						<div class="mb-3">
-							<p class="text-sm text-base-content/70 mb-2">الصور الحالية:</p>
+							<p class="mb-2 text-sm text-base-content/70">الصور الحالية:</p>
 							<div class="grid grid-cols-3 gap-2">
 								{#each existingImages as img, index}
 									<div class="relative aspect-square">
@@ -411,7 +407,7 @@
 										<button
 											type="button"
 											onclick={() => removeExistingImage(index)}
-											class="btn btn-circle btn-error absolute -left-2 -top-2 btn-xs"
+											class="btn absolute -top-2 -left-2 btn-circle btn-xs btn-error"
 										>
 											<X size={14} />
 										</button>
@@ -422,16 +418,22 @@
 					{/if}
 
 					<!-- File Input -->
-					<label class="btn btn-outline w-full">
+					<label class="btn w-full btn-outline">
 						<Upload size={20} />
 						إضافة صور جديدة
-						<input type="file" accept="image/*" multiple onchange={handleFileSelect} class="hidden" />
+						<input
+							type="file"
+							accept="image/*"
+							multiple
+							onchange={handleFileSelect}
+							class="hidden"
+						/>
 					</label>
 
 					<!-- New Images Preview -->
 					{#if newPreviewUrls.length > 0}
 						<div class="mt-3">
-							<p class="text-sm text-base-content/70 mb-2">صور جديدة:</p>
+							<p class="mb-2 text-sm text-base-content/70">صور جديدة:</p>
 							<div class="grid grid-cols-3 gap-2">
 								{#each newPreviewUrls as url, index}
 									<div class="relative aspect-square">
@@ -443,7 +445,7 @@
 										<button
 											type="button"
 											onclick={() => removeNewFile(index)}
-											class="btn btn-circle btn-error absolute -left-2 -top-2 btn-xs"
+											class="btn absolute -top-2 -left-2 btn-circle btn-xs btn-error"
 										>
 											<X size={14} />
 										</button>
@@ -463,7 +465,7 @@
 			{/if}
 
 			<!-- Submit Button -->
-			<button type="submit" disabled={isSubmitting} class="btn btn-primary w-full">
+			<button type="submit" disabled={isSubmitting} class="btn w-full btn-primary">
 				{#if isSubmitting}
 					<Loader size={20} class="animate-spin" />
 					جاري التحديث...

@@ -126,7 +126,9 @@
 				<div class="text-center">
 					<p class="text-sm">
 						ليس لديك حساب؟
-						<a href={resolve('/auth/signup')} class="link font-semibold link-primary"> إنشاء حساب جديد </a>
+						<a href={resolve('/auth/signup')} class="link font-semibold link-primary">
+							إنشاء حساب جديد
+						</a>
 					</p>
 				</div>
 			</div>

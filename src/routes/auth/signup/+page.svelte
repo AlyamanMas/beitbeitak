@@ -67,15 +67,20 @@
 		<!-- Signup Form -->
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body">
-				<h2 class="card-title mb-4 text-2xl">إنشاء حساب جديد</h2>
+				<h2 class="mb-4 card-title text-2xl">إنشاء حساب جديد</h2>
 
 				{#if error}
-					<div class="alert alert-error mb-4">
+					<div class="mb-4 alert alert-error">
 						<span>{error}</span>
 					</div>
 				{/if}
 
-				<form onsubmit={(e) => { e.preventDefault(); handleSignup(); }}>
+				<form
+					onsubmit={(e) => {
+						e.preventDefault();
+						handleSignup();
+					}}
+				>
 					<!-- First Name -->
 					<div class="form-control w-full">
 						<label class="label" for="firstName">
@@ -158,7 +163,7 @@
 
 					<!-- Submit Button -->
 					<div class="form-control mt-6">
-						<button type="submit" class="btn btn-primary w-full" disabled={loading}>
+						<button type="submit" class="btn w-full btn-primary" disabled={loading}>
 							{#if loading}
 								<span class="loading loading-spinner"></span>
 								جاري إنشاء الحساب...
@@ -174,7 +179,7 @@
 				<div class="text-center">
 					<p class="text-sm">
 						لديك حساب بالفعل؟
-						<a href={resolve('/auth/login')} class="link-primary link font-semibold">
+						<a href={resolve('/auth/login')} class="link font-semibold link-primary">
 							تسجيل الدخول
 						</a>
 					</p>

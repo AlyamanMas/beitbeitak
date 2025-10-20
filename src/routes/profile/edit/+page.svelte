@@ -195,7 +195,7 @@
 
 {#if loading}
 	<div class="flex min-h-screen items-center justify-center bg-base-200">
-		<span class="loading loading-spinner loading-lg"></span>
+		<span class="loading loading-lg loading-spinner"></span>
 	</div>
 {:else}
 	<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
@@ -221,11 +221,11 @@
 				<!-- Profile Picture -->
 				<div class="card bg-base-100 shadow-md">
 					<div class="card-body p-4">
-						<h2 class="card-title text-base mb-3">الصورة الشخصية</h2>
+						<h2 class="mb-3 card-title text-base">الصورة الشخصية</h2>
 
 						<div class="flex flex-col items-center gap-4">
 							<!-- Current or New Picture Preview -->
-							<div class="avatar placeholder">
+							<div class="placeholder avatar">
 								<div
 									class="w-32 rounded-full {newProfilePicPreview ||
 									(currentProfilePicUrl && !removeCurrentPic)
@@ -248,13 +248,13 @@
 							</div>
 
 							<!-- Actions -->
-							<div class="flex flex-col w-full gap-2">
+							<div class="flex w-full flex-col gap-2">
 								{#if newProfilePicPreview}
 									<!-- Cancel new picture -->
 									<button
 										type="button"
 										onclick={cancelNewProfilePic}
-										class="btn btn-outline btn-sm gap-2"
+										class="btn gap-2 btn-outline btn-sm"
 									>
 										<X size={16} />
 										إلغاء الصورة الجديدة
@@ -264,7 +264,7 @@
 									<button
 										type="button"
 										onclick={markForRemoval}
-										class="btn btn-error btn-outline btn-sm gap-2"
+										class="btn gap-2 btn-outline btn-sm btn-error"
 									>
 										<Trash2 size={16} />
 										إزالة الصورة الحالية
@@ -274,7 +274,7 @@
 									<button
 										type="button"
 										onclick={cancelRemoval}
-										class="btn btn-outline btn-sm gap-2"
+										class="btn gap-2 btn-outline btn-sm"
 									>
 										<X size={16} />
 										إلغاء الإزالة
@@ -283,7 +283,7 @@
 
 								<!-- Upload new picture -->
 								{#if !newProfilePicPreview}
-									<label class="btn btn-primary btn-sm gap-2">
+									<label class="btn gap-2 btn-sm btn-primary">
 										<Camera size={16} />
 										{currentProfilePicUrl && !removeCurrentPic ? 'تغيير الصورة' : 'إضافة صورة'}
 										<input
@@ -351,7 +351,7 @@
 				{/if}
 
 				<!-- Submit Button -->
-				<button type="submit" disabled={isSubmitting} class="btn btn-primary w-full gap-2">
+				<button type="submit" disabled={isSubmitting} class="btn w-full gap-2 btn-primary">
 					{#if isSubmitting}
 						<Loader size={20} class="animate-spin" />
 						جاري الحفظ...

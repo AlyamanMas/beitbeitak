@@ -81,12 +81,10 @@
 			const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
 			const filePath = fileName;
 
-			const { data, error } = await supabase.storage
-				.from('house_pics')
-				.upload(filePath, file, {
-					cacheControl: '3600',
-					upsert: false
-				});
+			const { data, error } = await supabase.storage.from('house_pics').upload(filePath, file, {
+				cacheControl: '3600',
+				upsert: false
+			});
 
 			if (error) {
 				throw error;
@@ -158,9 +156,7 @@
 				pic_name: picPath
 			}));
 
-			const { error: picError } = await supabase
-				.from('listing_to_pic')
-				.insert(listingToPicEntries);
+			const { error: picError } = await supabase.from('listing_to_pic').insert(listingToPicEntries);
 
 			if (picError) {
 				throw picError;
@@ -190,16 +186,18 @@
 
 	<!-- Form -->
 	<div class="container mx-auto max-w-2xl p-4">
-		<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-4">
+		<form
+			onsubmit={(e) => {
+				e.preventDefault();
+				handleSubmit();
+			}}
+			class="space-y-4"
+		>
 			<!-- Town Selection -->
 			<div class="card bg-base-100 shadow-md">
 				<div class="card-body p-4">
 					<h2 class="card-title text-base">المنطقة *</h2>
-					<select
-						bind:value={town}
-						class="select-bordered select w-full"
-						required
-					>
+					<select bind:value={town} class="select-bordered select w-full" required>
 						<option value="" disabled>اختر المنطقة</option>
 						{#each Object.keys(townNamesArabic) as townKey}
 							<option value={townKey}>{getTownNameArabic(townKey)}</option>
@@ -223,11 +221,7 @@
 						/>
 						<div class="form-control">
 							<label class="label cursor-pointer justify-start gap-3">
-								<input
-									type="checkbox"
-									bind:checked={rentInUsd}
-									class="checkbox"
-								/>
+								<input type="checkbox" bind:checked={rentInUsd} class="checkbox" />
 								<span class="label-text">الإيجار بالدولار الأمريكي</span>
 							</label>
 						</div>
@@ -324,11 +318,7 @@
 					{#if phoneNumber}
 						<div class="form-control">
 							<label class="label cursor-pointer justify-start gap-3">
-								<input
-									type="checkbox"
-									bind:checked={whatsappComm}
-									class="checkbox"
-								/>
+								<input type="checkbox" bind:checked={whatsappComm} class="checkbox" />
 								<span class="label-text">التواصل عبر واتساب</span>
 							</label>
 						</div>
@@ -356,7 +346,7 @@
 					<h2 class="card-title text-base">الصور *</h2>
 
 					<!-- File Input -->
-					<label class="btn btn-outline w-full">
+					<label class="btn w-full btn-outline">
 						<Upload size={20} />
 						إضافة صور
 						<input
@@ -381,7 +371,7 @@
 									<button
 										type="button"
 										onclick={() => removeFile(index)}
-										class="btn btn-circle btn-error absolute -left-2 -top-2 btn-xs"
+										class="btn absolute -top-2 -left-2 btn-circle btn-xs btn-error"
 									>
 										<X size={14} />
 									</button>
@@ -400,11 +390,7 @@
 			{/if}
 
 			<!-- Submit Button -->
-			<button
-				type="submit"
-				disabled={isSubmitting}
-				class="btn btn-primary w-full"
-			>
+			<button type="submit" disabled={isSubmitting} class="btn w-full btn-primary">
 				{#if isSubmitting}
 					<Loader size={20} class="animate-spin" />
 					جاري النشر...

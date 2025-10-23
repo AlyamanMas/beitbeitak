@@ -10,7 +10,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
-	import { User, Upload, X, Save, ArrowRight, Loader, Trash2, Camera } from 'lucide-svelte';
+	import { X, Save, ArrowRight, Loader, Trash2, Camera } from 'lucide-svelte';
 
 	let loading = $state(true);
 	let isSubmitting = $state(false);

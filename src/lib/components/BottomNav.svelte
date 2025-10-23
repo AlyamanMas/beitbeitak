@@ -1,5 +1,5 @@
 <script>
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { Home, User } from 'lucide-svelte';
@@ -21,7 +21,7 @@
 	}
 
 	// Reactive values
-	let currentPath = $derived($page.url.pathname);
+	let currentPath = $derived(page.url.pathname);
 	let profileData = $derived(getProfileData());
 	let profilePicUrl = $derived(getProfilePicUrl());
 </script>

@@ -146,7 +146,7 @@ export async function resetPassword(email) {
 
 /**
  * Get the current user
- * @returns {any}
+ * @returns {import('@supabase/supabase-js').User | null}
  */
 export function getUser() {
 	return user;
@@ -154,7 +154,7 @@ export function getUser() {
 
 /**
  * Get the current session
- * @returns {any}
+ * @returns {import('@supabase/supabase-js').Session | null}
  */
 export function getSession() {
 	return session;
@@ -178,7 +178,7 @@ export function isLoading() {
 
 /**
  * Get user profile data
- * @returns {any}
+ * @returns {ProfileData | null}
  */
 export function getProfileData() {
 	return profileData;

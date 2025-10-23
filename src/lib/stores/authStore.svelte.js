@@ -25,6 +25,7 @@ let profileData = $state(null);
  */
 export function initAuth() {
 	// Get initial session
+	// TODO: look at replacing getSession with getUser. Read function description for more details
 	supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
 		session = initialSession;
 		user = initialSession?.user ?? null;
@@ -35,14 +36,9 @@ export function initAuth() {
 	});
 
 	// Listen for auth changes
-	const { data: authListener } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+	const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
 		session = newSession;
 		user = newSession?.user ?? null;
-		if (user) {
-			await loadProfileData();
-		} else {
-			profileData = null;
-		}
 		loading = false;
 	});
 

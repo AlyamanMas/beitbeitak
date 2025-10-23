@@ -5,9 +5,19 @@ import { supabase } from '$lib/supabaseClient.js';
  * Manages user authentication state and provides auth methods
  */
 
+/**
+ * @typedef {Object} ProfileData
+ * @property {string} first_name
+ * @property {string} last_name
+ * @property {string} profile_pic
+ */
+
+/** @type {import('@supabase/supabase-js').User | null} */
 let user = $state(null);
+/** @type {import('@supabase/supabase-js').Session | null } */
 let session = $state(null);
 let loading = $state(true);
+/** @type {ProfileData | null} */
 let profileData = $state(null);
 
 /**

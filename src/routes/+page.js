@@ -1,11 +1,10 @@
 import { supabase } from '$lib/supabaseClient.js';
-import { browser } from '$app/environment';
 
 // Prerender the page shell
 export const prerender = true;
 
 /** @type {import('./$types').PageLoad} */
-export async function load() {
+export const load = async () => {
 	// Get the towns enum values for the filter
 	const towns = [
 		'Al-Hamidiyah',
@@ -20,16 +19,8 @@ export async function load() {
 		'Al-Adawiyah'
 	];
 
-	// Only fetch data on the client side
-	if (!browser) {
-		return {
-			listings: [],
-			towns
-		};
-	}
-
 	// Fetch all house listings with their images
-	const { data: listings, error } = await supabase
+	const listingsPromise = supabase
 		.from('house_listings')
 		.select(
 			`
@@ -41,16 +32,8 @@ export async function load() {
 		)
 		.order('created_at', { ascending: false });
 
-	if (error) {
-		console.error('Error fetching listings:', error);
-		return {
-			listings: [],
-			towns
-		};
-	}
-
 	return {
-		listings: listings || [],
+		listings: listingsPromise,
 		towns
 	};
-}
+};

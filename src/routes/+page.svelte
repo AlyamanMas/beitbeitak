@@ -31,17 +31,18 @@
 
 	/**
 	 * Filter listings based on selected criteria
-	 * @type {import('./$types').PageProps['data']['listings']}
+	 * @param {HouseListing[]} listings
+	 * @returns {HouseListing[]}
 	 */
-	let filteredListings = $derived(
-		data.listings.filter((listing) => {
+	const filterListings = (listings) => {
+		return listings.filter((listing) => {
 			if (selectedTown && listing.town !== selectedTown) return false;
 			if (listing.rent_per_month < minPrice || listing.rent_per_month > maxPrice) return false;
 			if (listing.num_bedrooms < minBedrooms) return false;
 			if (listing.num_bathrooms < minBathrooms) return false;
 			return true;
-		})
-	);
+		});
+	};
 
 	/**
 	 * Count active filters (excluding town since it has its own button)
@@ -139,9 +140,11 @@
 			</button>
 		</div>
 
-		<div class="text-sm text-base-content/70">
-			{filteredListings.length} عقار
-		</div>
+		{#await data.listings then listings}
+			{#if !listings.error}
+				{filterListings(listings.data).length} عقار
+			{/if}
+		{/await}
 	</div>
 
 	<!-- Filters Drawer -->
@@ -273,13 +276,27 @@
 
 	<!-- Listings Grid -->
 	<div class="grid grid-cols-1 gap-4">
-		{#each filteredListings as listing (listing.id)}
-			<ListingCard {listing} />
-		{:else}
-			<div class="text-center py-12">
-				<p class="text-lg text-base-content/60">لا توجد نتائج تطابق معايير البحث</p>
-			</div>
-		{/each}
+		{#await data.listings}
+			<!-- TODO: add loading spinner from BeerCSS -->
+			Loading
+		{:then listings}
+			{#if !listings.error}
+				{#each filterListings(listings.data) as listing (listing.id)}
+					<ListingCard {listing} />
+				{:else}
+					<div class="text-center py-12">
+						<p class="text-lg text-base-content/60">لا توجد نتائج تطابق معايير البحث</p>
+					</div>
+				{/each}
+			{:else}
+				<div class="py-12 text-center">
+					<p class="text-lg text-base-content/60">
+						<!-- TODO: translate into Arabic -->
+						Ran into an error. Please contact the system administrator. error: {listings.error}
+					</p>
+				</div>
+			{/if}
+		{/await}
 	</div>
 
 	<!-- FAB Button for Adding Listings -->

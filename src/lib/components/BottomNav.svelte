@@ -11,14 +11,16 @@
 
 <beer-css>
 	<nav class="bottom" dir="rtl">
-		<a href={resolve('/')} class={{ active: currentPath === '/' }}>
+		<a href={resolve('/')} class={{ active: currentPath === resolve('/') }}>
 			<i>home</i>
 			<div>الرئيسية</div>
 		</a>
 
 		<a
 			href={resolve(pathForProfile)}
-			class={{ active: currentPath === '/profile' || currentPath === '/auth/login' }}
+			class={{
+				active: currentPath === resolve('/profile') || currentPath === resolve('/auth/login')
+			}}
 		>
 			<i>person</i>
 			<div>الحساب</div>

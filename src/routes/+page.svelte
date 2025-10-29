@@ -5,6 +5,7 @@
 	import { resolve } from '$app/paths';
 	import ListingCard from '$lib/components/ListingCard.svelte';
 	import { SlidersHorizontal, Plus, House, X } from 'lucide-svelte';
+	import 'beercss/custom-element';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
@@ -277,8 +278,11 @@
 	<!-- Listings Grid -->
 	<div class="grid grid-cols-1 gap-4">
 		{#await data.listings}
-			<!-- TODO: add loading spinner from BeerCSS -->
-			Loading
+			<div class="flex items-center justify-center" style="min-height: calc(100vh - 20rem);">
+				<beer-css>
+					<div class="shape loading-indicator extra"></div>
+				</beer-css>
+			</div>
 		{:then listings}
 			{#if !listings.error}
 				{#each filterListings(listings.data) as listing (listing.id)}

@@ -1,10 +1,7 @@
 <script>
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
-	import { isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import 'beercss/custom-element';
-
-	const pathForProfile = isAuthenticated() ? '/profile' : '/auth/login';
 
 	let currentPath = $derived(page.url.pathname);
 </script>
@@ -17,7 +14,7 @@
 		</a>
 
 		<a
-			href={resolve(pathForProfile)}
+			href={resolve('/profile/')}
 			class={{
 				active: currentPath === resolve('/profile') || currentPath === resolve('/auth/login')
 			}}

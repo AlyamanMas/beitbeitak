@@ -42,6 +42,8 @@ export function initAuth() {
 		loading = false;
 	});
 
+	loadProfileData();
+
 	return authListener;
 }
 

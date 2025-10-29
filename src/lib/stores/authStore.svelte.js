@@ -163,7 +163,28 @@ export function getSession() {
  * @returns {boolean}
  */
 export function isAuthenticated() {
+	// console.debug(
+	// 	`isAuthenticated: loading ${loading} user ${user} return_value ${!loading && !!user}`
+	// );
 	return !!user;
+}
+
+/**
+ * Execute callback once auth is initialized
+ * @param {(authenticated: boolean) => void} callback
+ */
+export function onAuthReady(callback) {
+	if (!loading) {
+		callback(!!user);
+		return;
+	}
+
+	const checkInterval = setInterval(() => {
+		if (!loading) {
+			clearInterval(checkInterval);
+			callback(!!user);
+		}
+	}, 50);
 }
 
 /**

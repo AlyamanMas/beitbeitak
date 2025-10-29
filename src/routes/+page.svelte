@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import ListingCard from '$lib/components/ListingCard.svelte';
-	import { SlidersHorizontal, Plus, House, X } from 'lucide-svelte';
+	import { SlidersHorizontal, House, X } from 'lucide-svelte';
 	import 'beercss/custom-element';
 
 	/** @type {import('./$types').PageProps} */
@@ -275,8 +275,7 @@
 		</div>
 	{/if}
 
-	<!-- Listings Grid -->
-	<div class="grid grid-cols-1 gap-4">
+	<div id="listings-grid" class="grid grid-cols-1 gap-4">
 		{#await data.listings}
 			<div class="flex items-center justify-center" style="min-height: calc(100vh - 20rem);">
 				<beer-css>
@@ -303,16 +302,16 @@
 		{/await}
 	</div>
 
-	<!-- FAB Button for Adding Listings -->
 	{#if !showFilters}
-		<div class="fab" style="bottom: 5rem;">
+		<beer-css>
 			<button
+				id="new-post-fab"
+				class="square extra fixed bottom-22 left-2"
 				onclick={handleAddListing}
-				class="btn btn-circle btn-lg btn-primary"
 				aria-label="إضافة إعلان"
 			>
-				<Plus size={28} />
+				<i>add</i>
 			</button>
-		</div>
+		</beer-css>
 	{/if}
 </div>

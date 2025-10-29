@@ -1,6 +1,6 @@
 <!-- TODO: add button to return to main page -->
 <script>
-	import { signIn, isAuthenticated } from '$lib/stores/authStore.svelte.js';
+	import { signIn, onAuthReady } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
@@ -8,17 +8,16 @@
 	let email = $state('');
 	let password = $state('');
 	let error = $state('');
-	let loading = $state(false);
+	let loading = $state(true);
 
 	// Redirect if already authenticated
 	onMount(() => {
 		console.debug('/auth/login: inside page onMount');
-		if (isAuthenticated()) {
-			console.debug(
-				'/auth/login: inside page onMount if(isAuthenticated()) statement call. Going to /'
-			);
-			goto(resolve('/'));
-		}
+		onAuthReady((authenticated) => {
+			if (authenticated) {
+				goto(resolve('/'));
+			}
+		});
 	});
 
 	/**

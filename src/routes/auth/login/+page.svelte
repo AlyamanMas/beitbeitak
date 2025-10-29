@@ -12,7 +12,11 @@
 
 	// Redirect if already authenticated
 	onMount(() => {
+		console.debug('/auth/login: inside page onMount');
 		if (isAuthenticated()) {
+			console.debug(
+				'/auth/login: inside page onMount if(isAuthenticated()) statement call. Going to /'
+			);
 			goto(resolve('/'));
 		}
 	});

@@ -275,7 +275,7 @@
 		</div>
 	{/if}
 
-	<div id="listings-grid" class="grid grid-cols-1 gap-4">
+	<div id="listings-grid" class="flex flex-wrap justify-center gap-4">
 		{#await data.listings}
 			<div class="flex items-center justify-center" style="min-height: calc(100vh - 20rem);">
 				<beer-css>

@@ -8,7 +8,7 @@
 	let email = $state('');
 	let password = $state('');
 	let error = $state('');
-	let loading = $state(true);
+	let loading = $state(false);
 
 	// Redirect if already authenticated
 	onMount(() => {

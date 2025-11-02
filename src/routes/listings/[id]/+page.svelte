@@ -189,9 +189,7 @@
 			{/if}
 
 			<section id="address-section">
-				<h4 class="flex">
-					<i class="text-base">location_on</i> العنوان
-				</h4>
+				<h4 class="flex">العنوان</h4>
 				<p class="text-base">{data.listing.address}</p>
 			</section>
 

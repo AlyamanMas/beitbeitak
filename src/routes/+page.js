@@ -6,6 +6,7 @@ export const prerender = true;
 /** @type {import('./$types').PageLoad} */
 export const load = async () => {
 	// Get the towns enum values for the filter
+	// TODO: move this somewhere else. Why did you even put it here, claude ;-;
 	const towns = [
 		'Al-Hamidiyah',
 		'Bab al-Dreib',

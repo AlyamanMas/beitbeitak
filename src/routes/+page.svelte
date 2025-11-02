@@ -70,7 +70,7 @@
 	}
 </script>
 
-<div class="min-h-screen bg-base-200 p-4 pb-24" dir="rtl">
+<div class="min-h-screen bg-base-200 p-4" dir="rtl">
 	<!-- Header -->
 	<div class="mb-4">
 		<h1 class="mb-2 text-center text-3xl font-bold">البيت بيتك</h1>

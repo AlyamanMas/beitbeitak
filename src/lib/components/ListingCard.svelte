@@ -54,7 +54,7 @@
 				</div>
 				<div aria-label="property details" class="flex flex-wrap gap-2">
 					{#each properties as property (property[0])}
-						<span class="chip" style="margin-inline: 0px;">
+						<span class="chip no-wave" style="margin-inline: 0px;">
 							<i>{property[0]}</i>{property[1]}
 						</span>
 					{/each}

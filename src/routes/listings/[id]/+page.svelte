@@ -3,20 +3,8 @@
 	import { getTownNameArabic } from '$lib/towns.js';
 	import { getUser, isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { resolve } from '$app/paths';
-	import {
-		Home,
-		Bed,
-		Bath,
-		Maximize,
-		MapPin,
-		Phone,
-		Calendar,
-		User,
-		ExternalLink,
-		ChevronRight,
-		ArrowRight,
-		Edit
-	} from 'lucide-svelte';
+	import 'beercss/custom-element';
+	import { goto } from '$app/navigation';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
@@ -51,7 +39,7 @@
 	 */
 	function formatPrice(price, isUsd) {
 		const formatted = price.toLocaleString('ar-SY');
-		return isUsd ? `$${formatted}` : `${formatted} ل.س`;
+		return isUsd ? `${formatted}$` : `${formatted} ل.س`;
 	}
 
 	/**
@@ -96,185 +84,128 @@
 	function getTelUrl(phoneNumber) {
 		return `tel:${phoneNumber}`;
 	}
-
-	/**
-	 * Navigate to next image
-	 */
-	function nextImage() {
-		if (data.listing.listing_to_pic && data.listing.listing_to_pic.length > 0) {
-			currentImageIndex = (currentImageIndex + 1) % data.listing.listing_to_pic.length;
-		}
-	}
-
-	/**
-	 * Navigate to previous image
-	 */
-	function previousImage() {
-		if (data.listing.listing_to_pic && data.listing.listing_to_pic.length > 0) {
-			currentImageIndex =
-				(currentImageIndex - 1 + data.listing.listing_to_pic.length) %
-				data.listing.listing_to_pic.length;
-		}
-	}
 </script>
 
-<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
-	<!-- Back Button -->
-	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
-		<a href={resolve('/')} class="btn gap-2 btn-ghost btn-sm">
-			<ArrowRight size={20} />
-			العودة إلى القائمة
-		</a>
-	</div>
+<beer-css>
+	<div dir="rtl">
+		<header>
+			<nav>
+				<button onclick={() => goto(resolve('/'))} class="transparent">
+					<i>arrow_forward</i>
+					<span>العودة إلى القائمة</span>
+				</button>
+			</nav>
+		</header>
 
-	<!-- Image Carousel -->
-	{#if data.listing.listing_to_pic && data.listing.listing_to_pic.length > 0}
-		<div class="relative bg-black">
-			<div class="aspect-video w-full">
-				<!-- TODO: add page for image viewing when clicking on it -->
-				<img
-					src={getImageUrl(data.listing.listing_to_pic[currentImageIndex].pic_name)}
-					alt="صورة العقار"
-					class="h-full w-full object-cover"
-				/>
+		{#if data.listing.listing_to_pic && data.listing.listing_to_pic.length > 0}
+			<div class="relative" role="region" aria-label="معرض الصور">
+				<div class="aspect-video w-full">
+					<img
+						src={getImageUrl(data.listing.listing_to_pic[currentImageIndex].pic_name)}
+						alt="صورة العقار"
+						class="h-full w-full object-cover"
+					/>
+				</div>
+
+				{#if data.listing.listing_to_pic.length > 1}
+					<p
+						class="small-blur chip absolute bottom-4 left-1/2 -translate-x-1/2"
+						role="status"
+						aria-live="polite"
+					>
+						{currentImageIndex + 1} / {data.listing.listing_to_pic.length}
+					</p>
+				{/if}
 			</div>
 
-			<!-- Navigation Buttons -->
 			{#if data.listing.listing_to_pic.length > 1}
-				<button
-					onclick={previousImage}
-					class="btn absolute top-1/2 right-2 btn-circle -translate-y-1/2 border-none bg-black/50 text-white btn-sm hover:bg-black/70"
-					aria-label="الصورة السابقة"
-				>
-					<ChevronRight size={20} />
-				</button>
-				<button
-					onclick={nextImage}
-					class="btn absolute top-1/2 left-2 btn-circle -translate-y-1/2 border-none bg-black/50 text-white btn-sm hover:bg-black/70"
-					aria-label="الصورة التالية"
-				>
-					<ChevronRight size={20} class="rotate-180" />
-				</button>
-
-				<!-- Image Counter -->
-				<div
-					class="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-sm text-white"
-				>
-					{currentImageIndex + 1} / {data.listing.listing_to_pic.length}
-				</div>
-			{/if}
-		</div>
-
-		<!-- Thumbnail Strip -->
-		{#if data.listing.listing_to_pic.length > 1}
-			<div class="overflow-x-auto bg-base-100 p-2">
-				<div class="flex gap-2">
+				<div class="row scroll left-padding right-padding" role="region" aria-label="الصور المصغرة">
 					{#each data.listing.listing_to_pic as pic, index (pic)}
-						<button
-							onclick={() => (currentImageIndex = index)}
-							class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border-2 {currentImageIndex ===
-							index
-								? 'border-primary'
-								: 'border-transparent'}"
-						>
+						<article onclick={() => (currentImageIndex = index)} class="no-padding">
 							<img
 								src={getImageUrl(pic.pic_name)}
 								alt="صورة مصغرة {index + 1}"
-								class="h-full w-full object-cover"
+								class="h-20 w-20 object-cover"
 							/>
-						</button>
+						</article>
 					{/each}
 				</div>
-			</div>
+			{/if}
 		{/if}
-	{/if}
 
-	<!-- Listing Details -->
-	<div class="space-y-4 p-4">
-		<!-- Price Card -->
-		<div class="card bg-base-100 shadow-md">
-			<div class="card-body p-4">
-				<div class="text-3xl font-bold text-primary">
-					{formatPrice(data.listing.rent_per_month, data.listing.rent_in_usd)}
-					<span class="text-base font-normal text-base-content/70">/شهرياً</span>
+		<div class="padding">
+			<section id="price-section">
+				<div class="text-2xl">
+					{formatPrice(data.listing.rent_per_month, data.listing.rent_in_usd)}<span
+						class="text-base opacity-70">/شهرياً</span
+					>
 				</div>
-			</div>
-		</div>
+			</section>
 
-		<!-- Property Details Card -->
-		<div class="card bg-base-100 shadow-md">
-			<div class="card-body space-y-3 p-4">
-				<h2 class="card-title text-lg">تفاصيل العقار</h2>
+			<div class="small-space"></div>
 
-				<div class="grid grid-cols-2 gap-3">
-					<!-- Size -->
-					<div class="flex items-center gap-2 text-base-content/80">
-						<Maximize size={20} />
+			<section id="property-details">
+				<h4>تفاصيل العقار</h4>
+				<div class="flex flex-wrap gap-4">
+					<div class="flex items-center gap-2">
+						<i>square_foot</i>
 						<div>
-							<div class="text-xs text-base-content/60">المساحة</div>
+							<div class="text-xs opacity-60">المساحة</div>
 							<div class="font-semibold">{data.listing.size_m2} م²</div>
 						</div>
 					</div>
 
-					<!-- Bedrooms -->
-					<div class="flex items-center gap-2 text-base-content/80">
-						<Bed size={20} />
+					<div class="flex items-center gap-2">
+						<i>bed</i>
 						<div>
-							<div class="text-xs text-base-content/60">غرف النوم</div>
+							<div class="text-xs opacity-60">غرف النوم</div>
 							<div class="font-semibold">{data.listing.num_bedrooms}</div>
 						</div>
 					</div>
 
-					<!-- Bathrooms -->
-					<div class="flex items-center gap-2 text-base-content/80">
-						<Bath size={20} />
+					<div class="flex items-center gap-2">
+						<i>bathroom</i>
 						<div>
-							<div class="text-xs text-base-content/60">الحمامات</div>
+							<div class="text-xs opacity-60">الحمامات</div>
 							<div class="font-semibold">{data.listing.num_bathrooms}</div>
 						</div>
 					</div>
 
-					<!-- Town -->
-					<div class="flex items-center gap-2 text-base-content/80">
-						<Home size={20} />
+					<div class="flex items-center gap-2">
+						<i>home</i>
 						<div>
-							<div class="text-xs text-base-content/60">المنطقة</div>
+							<div class="text-xs opacity-60">المنطقة</div>
 							<div class="font-semibold">{getTownNameArabic(data.listing.town)}</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+			</section>
 
-		<!-- Address Card -->
-		<div class="card bg-base-100 shadow-md">
-			<div class="card-body p-4">
-				<h3 class="mb-2 flex items-center gap-2 text-sm font-semibold text-base-content/60">
-					<MapPin size={16} />
-					العنوان
-				</h3>
+			{#if data.listing.description}
+				<section id="description-section">
+					<h4 class="mb-3 text-lg font-semibold">الوصف</h4>
+					<p>{data.listing.description}</p>
+				</section>
+			{/if}
+
+			<section id="address-section">
+				<h4 class="flex">
+					<i class="text-base">location_on</i> العنوان
+				</h4>
 				<p class="text-base">{data.listing.address}</p>
-			</div>
-		</div>
+			</section>
 
-		<!-- Contact Information Card -->
-		{#if data.listing.phone_number || data.listing.source_url}
-			<div class="card bg-base-100 shadow-md">
-				<div class="card-body space-y-3 p-4">
-					<h3 class="text-lg font-semibold">معلومات التواصل</h3>
-
-					<!-- Phone Number -->
-					{#if data.listing.phone_number}
-						<div>
+			{#if data.listing.phone_number || data.listing.source_url}
+				<section id="contact-section">
+					<h4>معلومات التواصل</h4>
+					<div class="flex flex-col gap-2">
+						{#if data.listing.phone_number}
 							{#if data.listing.whatsapp_comm}
-								<!-- WhatsApp -->
-								<a
-									href={getWhatsAppUrl(data.listing.phone_number)}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="btn btn-block gap-2 btn-success"
+								<button
+									onclick={() =>
+										window.open(getWhatsAppUrl(data.listing.phone_number), '_blank')?.focus()}
+									class="responsive green5"
 								>
-									<!-- WhatsApp Icon (using Phone as placeholder since lucide-svelte might not have WhatsApp) -->
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										width="20"
@@ -286,32 +217,27 @@
 											d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
 										/>
 									</svg>
-									تواصل عبر واتساب
-								</a>
+									<span>تواصل عبر واتساب</span>
+								</button>
 							{:else}
-								<!-- Regular Phone -->
-								<a
-									href={getTelUrl(data.listing.phone_number)}
-									class="btn btn-block gap-2 btn-primary"
+								<button
+									onclick={() =>
+										window.open(getTelUrl(data.listing.phone_number), '_blank')?.focus()}
+									class="responsive"
 								>
-									<Phone size={20} />
-									اتصل: {data.listing.phone_number}
-								</a>
+									<i>phone</i>
+									<!-- TODO: fix alignment/formatting of phone number -->
+									<span>اتصل: {data.listing.phone_number}</span>
+								</button>
 							{/if}
-						</div>
-					{/if}
+						{/if}
 
-					<!-- Source URL -->
-					{#if data.listing.source_url}
-						<div>
-							<a
-								href={data.listing.source_url}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="btn btn-block gap-2 btn-outline"
+						{#if data.listing.source_url}
+							<button
+								onclick={() => window.open(data.listing.source_url, '_blank')?.focus()}
+								class={'responsive' + isFacebookUrl(data.listing.source_url) ? 'blue9' : ''}
 							>
 								{#if isFacebookUrl(data.listing.source_url)}
-									<!-- Facebook Icon -->
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										width="20"
@@ -323,53 +249,47 @@
 											d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
 										/>
 									</svg>
-									عرض على فيسبوك
+									<span>عرض على فيسبوك</span>
 								{:else}
-									<ExternalLink size={20} />
-									رابط المصدر
+									<i>open_in_new</i>
+									<span>رابط المصدر</span>
 								{/if}
-							</a>
+							</button>
+						{/if}
+					</div>
+				</section>
+			{/if}
+
+			<section id="metadata-section">
+				<div class="space-y-2">
+					{#if data.listing.users}
+						<div class="flex items-center gap-2 text-sm opacity-70">
+							<i class="text-base">person</i>
+							<span
+								>منشور بواسطة: {data.listing.users.first_name}
+								{data.listing.users.last_name}</span
+							>
 						</div>
 					{/if}
-				</div>
-			</div>
-		{/if}
 
-		<!-- Additional Information Card -->
-		<div class="card bg-base-100 shadow-md">
-			<div class="card-body space-y-2 p-4">
-				<!-- Author -->
-				{#if data.listing.users}
-					<div class="flex items-center gap-2 text-sm text-base-content/70">
-						<User size={16} />
-						<span
-							>منشور بواسطة: {data.listing.users.first_name}
-							{data.listing.users.last_name}</span
-						>
+					<div class="flex items-center gap-2 text-sm opacity-70">
+						<i class="text-base">calendar_today</i>
+						<span>تاريخ النشر: {formatDate(data.listing.created_at)}</span>
 					</div>
-				{/if}
-
-				<!-- Created Date -->
-				<div class="flex items-center gap-2 text-sm text-base-content/70">
-					<Calendar size={16} />
-					<span>تاريخ النشر: {formatDate(data.listing.created_at)}</span>
 				</div>
-			</div>
-		</div>
+			</section>
 
-		<!-- Edit Button (only for listing owner) -->
-		{#if isOwner()}
-			<div class="card bg-base-100 shadow-md">
-				<div class="card-body p-4">
-					<a
-						href={resolve(`/listings/${data.listing.id}/edit`)}
-						class="btn w-full gap-2 btn-outline"
+			{#if isOwner()}
+				<section id="edit-section">
+					<button
+						onclick={() => goto(resolve(`/listings/${data.listing.id}/edit`))}
+						class="responsive red"
 					>
-						<Edit size={20} />
-						تعديل الإعلان
-					</a>
-				</div>
-			</div>
-		{/if}
+						<i>edit</i>
+						<span>تعديل الإعلان</span>
+					</button>
+				</section>
+			{/if}
+		</div>
 	</div>
-</div>
+</beer-css>

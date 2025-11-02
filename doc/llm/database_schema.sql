@@ -39,6 +39,7 @@ CREATE TABLE public.house_listings (
   phone_number text,
   whatsapp_comm boolean NOT NULL,
   rent_in_usd boolean NOT NULL,
+  description text,
   CONSTRAINT house_listings_pkey PRIMARY KEY (id),
   CONSTRAINT house_listing_author_fkey FOREIGN KEY (author) REFERENCES public.users(id)
 );

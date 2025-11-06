@@ -86,8 +86,8 @@
 	}
 </script>
 
-<beer-css>
-	<div dir="rtl">
+<div class="pb-16" dir="rtl">
+	<beer-css>
 		<header>
 			<nav>
 				<button onclick={() => goto(resolve('/'))} class="transparent">
@@ -289,5 +289,5 @@
 				</section>
 			{/if}
 		</div>
-	</div>
-</beer-css>
+	</beer-css>
+</div>

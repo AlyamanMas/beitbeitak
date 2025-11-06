@@ -7,20 +7,22 @@
 </script>
 
 <beer-css>
-	<nav class="bottom" dir="rtl">
-		<a href={resolve('/')} class={{ active: currentPath === resolve('/') }}>
-			<i>home</i>
-			<div>الرئيسية</div>
-		</a>
+	<div class="bottom fixed w-full">
+		<nav class="bottom" dir="rtl">
+			<a href={resolve('/')} class={{ active: currentPath === resolve('/') }}>
+				<i>home</i>
+				<div>الرئيسية</div>
+			</a>
 
-		<a
-			href={resolve('/profile/')}
-			class={{
-				active: currentPath === resolve('/profile') || currentPath === resolve('/auth/login')
-			}}
-		>
-			<i>person</i>
-			<div>الحساب</div>
-		</a>
-	</nav>
+			<a
+				href={resolve('/profile/')}
+				class={{
+					active: currentPath === resolve('/profile') || currentPath === resolve('/auth/login')
+				}}
+			>
+				<i>person</i>
+				<div>الحساب</div>
+			</a>
+		</nav>
+	</div>
 </beer-css>

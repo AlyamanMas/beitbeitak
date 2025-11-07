@@ -1,5 +1,5 @@
 <script>
-	import { getTownNameArabic } from '$lib/towns.js';
+	import { getTownNameArabic, towns } from '$lib/towns.js';
 	import { isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
@@ -113,7 +113,7 @@
 									جميع المناطق
 								</button>
 							</li>
-							{#each data.towns as town (town)}
+							{#each towns as town (town)}
 								<li>
 									<button
 										onclick={() => {
@@ -186,7 +186,7 @@
 							bind:value={selectedTown}
 						>
 							<option value="">جميع المناطق</option>
-							{#each data.towns as town (town)}
+							{#each towns as town (town)}
 								<option value={town}>{getTownNameArabic(town)}</option>
 							{/each}
 						</select>

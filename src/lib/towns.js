@@ -1,6 +1,10 @@
 /**
+ * @typedef {"Al-Hamidiyah" | "Bab al-Dreib" | "Bab Tadmur" | "Bab Hud" | "Al-Qarabis" | "Al-Qusour" | "Al-Waer" | "Al-Ghouta" | "Inshaat" | "Al-Adawiyah"} Town
+ */
+
+/**
  * Town name translations from English to Arabic
- * @type {Object.<string, string>}
+ * @type {Record<Town, string>}
  */
 export const townNamesArabic = {
 	'Al-Hamidiyah': 'الحميدية',
@@ -15,9 +19,11 @@ export const townNamesArabic = {
 	'Al-Adawiyah': 'العدوية'
 };
 
+export const towns = Object.keys(townNamesArabic);
+
 /**
  * Get Arabic town name from English name
- * @param {string} townEnglish
+ * @param {Town} townEnglish
  * @returns {string}
  */
 export function getTownNameArabic(townEnglish) {

@@ -17,9 +17,9 @@
 	});
 </script>
 
-<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
+<div class="bg-base-200 min-h-screen pb-24" dir="rtl">
 	<!-- Header -->
-	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
+	<div class="bg-base-100 sticky top-0 z-10 p-4 shadow-sm">
 		<div class="flex items-center justify-between">
 			<div class="flex items-center gap-3">
 				<a href={resolve('/profile')} class="btn btn-circle btn-ghost btn-sm">
@@ -27,7 +27,7 @@
 				</a>
 				<h1 class="text-xl font-bold">إعلاناتي</h1>
 			</div>
-			<a href={resolve('/listings/new')} class="btn gap-2 btn-sm btn-primary">
+			<a href={resolve('/listings/new')} class="btn btn-sm btn-primary gap-2">
 				<Plus size={16} />
 				إضافة إعلان
 			</a>
@@ -39,10 +39,10 @@
 		{#if data.listings.length === 0}
 			<div class="py-12 text-center">
 				<div class="mb-4">
-					<House size={64} class="mx-auto text-base-content/30" />
+					<House size={64} class="text-base-content/30 mx-auto" />
 				</div>
-				<p class="mb-4 text-lg text-base-content/60">لم تقم بنشر أي إعلانات بعد</p>
-				<a href={resolve('/listings/new')} class="btn gap-2 btn-primary">
+				<p class="text-base-content/60 mb-4 text-lg">لم تقم بنشر أي إعلانات بعد</p>
+				<a href={resolve('/listings/new')} class="btn btn-primary gap-2">
 					<Plus size={20} />
 					إضافة إعلان جديد
 				</a>

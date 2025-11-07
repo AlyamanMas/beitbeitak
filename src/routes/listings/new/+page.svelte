@@ -173,9 +173,9 @@
 	}
 </script>
 
-<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
+<div class="bg-base-200 min-h-screen pb-24" dir="rtl">
 	<!-- Header -->
-	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
+	<div class="bg-base-100 sticky top-0 z-10 p-4 shadow-sm">
 		<div class="flex items-center gap-3">
 			<a href={resolve('/')} class="btn btn-circle btn-ghost btn-sm">
 				<ArrowRight size={20} />
@@ -346,7 +346,7 @@
 					<h2 class="card-title text-base">الصور *</h2>
 
 					<!-- File Input -->
-					<label class="btn w-full btn-outline">
+					<label class="btn btn-outline w-full">
 						<Upload size={20} />
 						إضافة صور
 						<input
@@ -371,7 +371,7 @@
 									<button
 										type="button"
 										onclick={() => removeFile(index)}
-										class="btn absolute -top-2 -left-2 btn-circle btn-xs btn-error"
+										class="btn btn-circle btn-xs btn-error absolute -top-2 -left-2"
 									>
 										<X size={14} />
 									</button>
@@ -390,7 +390,7 @@
 			{/if}
 
 			<!-- Submit Button -->
-			<button type="submit" disabled={isSubmitting} class="btn w-full btn-primary">
+			<button type="submit" disabled={isSubmitting} class="btn btn-primary w-full">
 				{#if isSubmitting}
 					<Loader size={20} class="animate-spin" />
 					جاري النشر...

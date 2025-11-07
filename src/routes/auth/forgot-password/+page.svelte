@@ -33,11 +33,11 @@
 	}
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-base-200 p-4" dir="rtl">
+<div class="bg-base-200 flex min-h-screen items-center justify-center p-4" dir="rtl">
 	<div class="w-full max-w-md">
 		<!-- Logo/Brand -->
 		<div class="mb-8 text-center">
-			<h1 class="mb-2 text-4xl font-bold text-primary">بيت بيتك</h1>
+			<h1 class="text-primary mb-2 text-4xl font-bold">بيت بيتك</h1>
 			<p class="text-base-content/70">استعادة كلمة المرور</p>
 		</div>
 
@@ -45,15 +45,15 @@
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body">
 				<!-- Back Button -->
-				<a href={resolve('/auth/login')} class="btn mb-2 self-start btn-ghost btn-sm">
+				<a href={resolve('/auth/login')} class="btn btn-ghost btn-sm mb-2 self-start">
 					<ArrowRight size={20} />
 					العودة إلى تسجيل الدخول
 				</a>
 
-				<h2 class="mb-4 card-title text-2xl">نسيت كلمة المرور؟</h2>
+				<h2 class="card-title mb-4 text-2xl">نسيت كلمة المرور؟</h2>
 
 				{#if success}
-					<div class="mb-4 alert alert-success">
+					<div class="alert alert-success mb-4">
 						<div>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -75,12 +75,12 @@
 						</div>
 					</div>
 				{:else}
-					<p class="mb-4 text-sm text-base-content/70">
+					<p class="text-base-content/70 mb-4 text-sm">
 						أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور
 					</p>
 
 					{#if error}
-						<div class="mb-4 alert alert-error">
+						<div class="alert alert-error mb-4">
 							<span>{error}</span>
 						</div>
 					{/if}
@@ -109,7 +109,7 @@
 
 						<!-- Submit Button -->
 						<div class="form-control mt-6">
-							<button type="submit" class="btn w-full btn-primary" disabled={loading}>
+							<button type="submit" class="btn btn-primary w-full" disabled={loading}>
 								{#if loading}
 									<span class="loading loading-spinner"></span>
 									جاري الإرسال...

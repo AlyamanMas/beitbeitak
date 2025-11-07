@@ -56,21 +56,21 @@
 	}
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-base-200 p-4" dir="rtl">
+<div class="bg-base-200 flex min-h-screen items-center justify-center p-4" dir="rtl">
 	<div class="w-full max-w-md">
 		<!-- Logo/Brand -->
 		<div class="mb-8 text-center">
-			<h1 class="mb-2 text-4xl font-bold text-primary">بيت بيتك</h1>
+			<h1 class="text-primary mb-2 text-4xl font-bold">بيت بيتك</h1>
 			<p class="text-base-content/70">انضم إلينا اليوم</p>
 		</div>
 
 		<!-- Signup Form -->
 		<div class="card bg-base-100 shadow-xl">
 			<div class="card-body">
-				<h2 class="mb-4 card-title text-2xl">إنشاء حساب جديد</h2>
+				<h2 class="card-title mb-4 text-2xl">إنشاء حساب جديد</h2>
 
 				{#if error}
-					<div class="mb-4 alert alert-error">
+					<div class="alert alert-error mb-4">
 						<span>{error}</span>
 					</div>
 				{/if}
@@ -163,7 +163,7 @@
 
 					<!-- Submit Button -->
 					<div class="form-control mt-6">
-						<button type="submit" class="btn w-full btn-primary" disabled={loading}>
+						<button type="submit" class="btn btn-primary w-full" disabled={loading}>
 							{#if loading}
 								<span class="loading loading-spinner"></span>
 								جاري إنشاء الحساب...
@@ -179,7 +179,7 @@
 				<div class="text-center">
 					<p class="text-sm">
 						لديك حساب بالفعل؟
-						<a href={resolve('/auth/login')} class="link font-semibold link-primary">
+						<a href={resolve('/auth/login')} class="link link-primary font-semibold">
 							تسجيل الدخول
 						</a>
 					</p>

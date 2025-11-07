@@ -220,9 +220,9 @@
 	}
 </script>
 
-<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
+<div class="bg-base-200 min-h-screen pb-24" dir="rtl">
 	<!-- Header -->
-	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
+	<div class="bg-base-100 sticky top-0 z-10 p-4 shadow-sm">
 		<div class="flex items-center gap-3">
 			<a href={resolve(`/listings/${data.listing.id}`)} class="btn btn-circle btn-ghost btn-sm">
 				<ArrowRight size={20} />
@@ -395,7 +395,7 @@
 					<!-- Existing Images -->
 					{#if existingImages.length > 0}
 						<div class="mb-3">
-							<p class="mb-2 text-sm text-base-content/70">الصور الحالية:</p>
+							<p class="text-base-content/70 mb-2 text-sm">الصور الحالية:</p>
 							<div class="grid grid-cols-3 gap-2">
 								{#each existingImages as img, index}
 									<div class="relative aspect-square">
@@ -407,7 +407,7 @@
 										<button
 											type="button"
 											onclick={() => removeExistingImage(index)}
-											class="btn absolute -top-2 -left-2 btn-circle btn-xs btn-error"
+											class="btn btn-circle btn-xs btn-error absolute -top-2 -left-2"
 										>
 											<X size={14} />
 										</button>
@@ -418,7 +418,7 @@
 					{/if}
 
 					<!-- File Input -->
-					<label class="btn w-full btn-outline">
+					<label class="btn btn-outline w-full">
 						<Upload size={20} />
 						إضافة صور جديدة
 						<input
@@ -433,7 +433,7 @@
 					<!-- New Images Preview -->
 					{#if newPreviewUrls.length > 0}
 						<div class="mt-3">
-							<p class="mb-2 text-sm text-base-content/70">صور جديدة:</p>
+							<p class="text-base-content/70 mb-2 text-sm">صور جديدة:</p>
 							<div class="grid grid-cols-3 gap-2">
 								{#each newPreviewUrls as url, index}
 									<div class="relative aspect-square">
@@ -445,7 +445,7 @@
 										<button
 											type="button"
 											onclick={() => removeNewFile(index)}
-											class="btn absolute -top-2 -left-2 btn-circle btn-xs btn-error"
+											class="btn btn-circle btn-xs btn-error absolute -top-2 -left-2"
 										>
 											<X size={14} />
 										</button>
@@ -465,7 +465,7 @@
 			{/if}
 
 			<!-- Submit Button -->
-			<button type="submit" disabled={isSubmitting} class="btn w-full btn-primary">
+			<button type="submit" disabled={isSubmitting} class="btn btn-primary w-full">
 				{#if isSubmitting}
 					<Loader size={20} class="animate-spin" />
 					جاري التحديث...

@@ -7,12 +7,10 @@ export const prerender = true;
 export const load = async ({ url }) => {
 	let minPrice = url.searchParams.get('minPrice');
 	let maxPrice = url.searchParams.get('maxPrice');
-	let town = url.searchParams.get('town');
+	let towns = url.searchParams.getAll('town');
 	let numBedrooms = url.searchParams.get('numBedrooms');
 	let numBathrooms = url.searchParams.get('numBathrooms');
 
-	let townVal = url.searchParams.get('town');
-	townVal ? (town = townVal) : null;
 	// Fetch all house listings with their images
 	let listingsPromise = supabase
 		.from('house_listings')
@@ -33,8 +31,8 @@ export const load = async ({ url }) => {
 	if (numBathrooms !== null) {
 		listingsPromise = listingsPromise.eq('num_bathrooms', parseInt(numBathrooms));
 	}
-	if (town !== null) {
-		listingsPromise = listingsPromise.eq('town', town);
+	if (towns !== null && towns.length > 0) {
+		listingsPromise = listingsPromise.in('town', towns);
 	}
 	if (minPrice !== null) {
 		listingsPromise = listingsPromise.gte('rent_per_month', parseInt(minPrice));

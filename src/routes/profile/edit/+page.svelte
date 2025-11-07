@@ -10,7 +10,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
-	import { X, Save, ArrowRight, Loader, Trash2, Camera } from 'lucide-svelte';
+	import Avatar from '$lib/components/Avatar.svelte';
 
 	let loading = $state(true);
 	let isSubmitting = $state(false);
@@ -193,174 +193,91 @@
 	}
 </script>
 
-{#if loading}
-	<div class="flex min-h-screen items-center justify-center bg-base-200">
-		<span class="loading loading-lg loading-spinner"></span>
-	</div>
-{:else}
-	<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
-		<!-- Header -->
-		<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
-			<div class="flex items-center gap-3">
-				<a href={resolve('/profile')} class="btn btn-circle btn-ghost btn-sm">
-					<ArrowRight size={20} />
-				</a>
-				<h1 class="text-xl font-bold">تعديل الملف الشخصي</h1>
+<beer-css>
+	{#if loading}
+		<div class="flex min-h-screen items-center justify-center bg-base-200">
+			<span class="loading loading-lg loading-spinner"></span>
+		</div>
+	{:else}
+		<header>
+			<nav>
+				<button class="transparent">
+					<a href={resolve('/')}>
+						<i>arrow_forward</i>
+						<span>العودة إلى القائمة</span>
+					</a>
+				</button>
+			</nav>
+		</header>
+
+		<!-- <h4>الصورة الشخصية</h4> -->
+		<Avatar
+			name={{ first_name: firstName, last_name: lastName }}
+			profilePicUrl={newProfilePicPreview || currentProfilePicUrl}
+		/>
+		<div class="small-space"></div>
+
+		{#if newProfilePicPreview}
+			<!-- Cancel new picture -->
+			<button onclick={cancelNewProfilePic} class="responsive">
+				<i>cancel</i>
+				<span> إلغاء الصورة الجديدة </span>
+			</button>
+		{:else if currentProfilePicUrl && !removeCurrentPic}
+			<!-- Remove current picture -->
+			<button onclick={markForRemoval} class="responsive">
+				<i>delete</i>
+				<span> إزالة الصورة الحالية </span>
+			</button>
+		{:else if removeCurrentPic}
+			<!-- Cancel removal -->
+			<button onclick={cancelRemoval} class="responsive">
+				<i>cancel</i>
+				<span> إلغاء الإزالة </span>
+			</button>
+		{/if}
+
+		<!-- Upload new picture -->
+		{#if !newProfilePicPreview}
+			<button class="responsive">
+				<i>add_a_photo</i>
+				<span>
+					{currentProfilePicUrl && !removeCurrentPic ? 'تغيير الصورة' : 'إضافة صورة'}
+				</span>
+				<input type="file" accept="image/*" onchange={handleProfilePicSelect} />
+			</button>
+		{/if}
+
+		<div id="name">
+			<h4 class="card-title text-base">الاسم</h4>
+
+			<div class="field max label">
+				<input id="firstName" bind:value={firstName} required />
+				<label for="firstName">الاسم الأول *</label>
+			</div>
+
+			<div class="field max label">
+				<input id="lastName" bind:value={lastName} required />
+				<label for="lastName">الاسم الأخير *</label>
 			</div>
 		</div>
 
-		<!-- Form -->
-		<div class="container mx-auto max-w-2xl p-4">
-			<form
-				onsubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}
-				class="space-y-4"
-			>
-				<!-- Profile Picture -->
-				<div class="card bg-base-100 shadow-md">
-					<div class="card-body p-4">
-						<h2 class="mb-3 card-title text-base">الصورة الشخصية</h2>
-
-						<div class="flex flex-col items-center gap-4">
-							<!-- Current or New Picture Preview -->
-							<div class="placeholder avatar">
-								<div
-									class="w-32 rounded-full {newProfilePicPreview ||
-									(currentProfilePicUrl && !removeCurrentPic)
-										? 'ring ring-primary ring-offset-2 ring-offset-base-100'
-										: 'bg-primary text-primary-content'}"
-								>
-									{#if newProfilePicPreview}
-										<!-- New picture preview -->
-										<img src={newProfilePicPreview} alt="معاينة الصورة الجديدة" />
-									{:else if currentProfilePicUrl && !removeCurrentPic}
-										<!-- Current picture -->
-										<img src={currentProfilePicUrl} alt="الصورة الشخصية" />
-									{:else}
-										<!-- Placeholder -->
-										<span class="text-4xl">
-											{firstName?.[0] || 'م'}{lastName?.[0] || 'أ'}
-										</span>
-									{/if}
-								</div>
-							</div>
-
-							<!-- Actions -->
-							<div class="flex w-full flex-col gap-2">
-								{#if newProfilePicPreview}
-									<!-- Cancel new picture -->
-									<button
-										type="button"
-										onclick={cancelNewProfilePic}
-										class="btn gap-2 btn-outline btn-sm"
-									>
-										<X size={16} />
-										إلغاء الصورة الجديدة
-									</button>
-								{:else if currentProfilePicUrl && !removeCurrentPic}
-									<!-- Remove current picture -->
-									<button
-										type="button"
-										onclick={markForRemoval}
-										class="btn gap-2 btn-outline btn-sm btn-error"
-									>
-										<Trash2 size={16} />
-										إزالة الصورة الحالية
-									</button>
-								{:else if removeCurrentPic}
-									<!-- Cancel removal -->
-									<button
-										type="button"
-										onclick={cancelRemoval}
-										class="btn gap-2 btn-outline btn-sm"
-									>
-										<X size={16} />
-										إلغاء الإزالة
-									</button>
-								{/if}
-
-								<!-- Upload new picture -->
-								{#if !newProfilePicPreview}
-									<label class="btn gap-2 btn-sm btn-primary">
-										<Camera size={16} />
-										{currentProfilePicUrl && !removeCurrentPic ? 'تغيير الصورة' : 'إضافة صورة'}
-										<input
-											type="file"
-											accept="image/*"
-											onchange={handleProfilePicSelect}
-											class="hidden"
-										/>
-									</label>
-								{/if}
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Name -->
-				<div class="card bg-base-100 shadow-md">
-					<div class="card-body space-y-3 p-4">
-						<h2 class="card-title text-base">الاسم</h2>
-
-						<!-- First Name -->
-						<div class="form-control">
-							<label class="label" for="firstName">
-								<span class="label-text">الاسم الأول *</span>
-							</label>
-							<input
-								id="firstName"
-								type="text"
-								bind:value={firstName}
-								placeholder="الاسم الأول"
-								class="input-bordered input"
-								required
-							/>
-						</div>
-
-						<!-- Last Name -->
-						<div class="form-control">
-							<label class="label" for="lastName">
-								<span class="label-text">الاسم الأخير *</span>
-							</label>
-							<input
-								id="lastName"
-								type="text"
-								bind:value={lastName}
-								placeholder="الاسم الأخير"
-								class="input-bordered input"
-								required
-							/>
-						</div>
-					</div>
-				</div>
-
-				<!-- Success Message -->
-				{#if successMessage}
-					<div class="alert alert-success">
-						<span>{successMessage}</span>
-					</div>
-				{/if}
-
-				<!-- Error Message -->
-				{#if errorMessage}
-					<div class="alert alert-error">
-						<span>{errorMessage}</span>
-					</div>
-				{/if}
-
-				<!-- Submit Button -->
-				<button type="submit" disabled={isSubmitting} class="btn w-full gap-2 btn-primary">
-					{#if isSubmitting}
-						<Loader size={20} class="animate-spin" />
-						جاري الحفظ...
-					{:else}
-						<Save size={20} />
-						حفظ التغييرات
-					{/if}
-				</button>
-			</form>
+		<div id="success-message" class={['snackbar', successMessage && 'active']}>
+			{successMessage}
 		</div>
-	</div>
-{/if}
+
+		<div id="error-message" class={['snackbar error', errorMessage && 'active']}>
+			{errorMessage}
+		</div>
+
+		<button disabled={isSubmitting} onclick={handleSubmit} class="responsive">
+			{#if isSubmitting}
+				<progress class="circle"></progress>
+				<span>جاري الحفظ...</span>
+			{:else}
+				<i>save</i>
+				<span> حفظ التغييرات </span>
+			{/if}
+		</button>
+	{/if}
+</beer-css>

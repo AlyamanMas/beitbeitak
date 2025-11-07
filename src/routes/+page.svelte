@@ -70,12 +70,12 @@
 	}
 </script>
 
-<div class="px-4 pt-4 pb-24" dir="rtl">
-	<!-- Header -->
-	<div class="mb-4">
-		<h1 class="mb-2 text-center text-3xl font-bold">البيت بيتك</h1>
-		<p class="text-center text-base-content/70">ابحث عن بيت أحلامك في حمص</p>
-	</div>
+<div>
+	<header>
+		<nav>
+			<h6 class="max">البيت بيتك</h6>
+		</nav>
+	</header>
 
 	<!-- Filter Buttons -->
 	<div class="mb-4 flex items-center justify-between gap-2">

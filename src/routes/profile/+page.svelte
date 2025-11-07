@@ -37,59 +37,57 @@
 	let profilePicUrl = $derived(getProfilePicUrl());
 </script>
 
-<beer-css>
-	{#if loading}
-		<div class="flex min-h-screen items-center justify-center">
-			<div class="shape loading-indicator extra"></div>
-		</div>
-	{:else}
-		<div id="page" dir="rtl">
-			<header>
-				<nav>
-					<h6>الملف الشخصي</h6>
-				</nav>
-			</header>
+{#if loading}
+	<div class="flex min-h-screen items-center justify-center">
+		<div class="shape loading-indicator extra"></div>
+	</div>
+{:else}
+	<div id="page" dir="rtl">
+		<header>
+			<nav>
+				<h6>الملف الشخصي</h6>
+			</nav>
+		</header>
 
-			<Avatar name={profileData} {profilePicUrl} />
+		<Avatar name={profileData} {profilePicUrl} />
 
-			<ul id="user-info" class="medium-space list">
-				<li id="name">
-					<i>id_card</i>
-					<div class="max">
-						<h6 class="small">الاسم</h6>
-						<div>
-							{profileData?.first_name || ''}
-							{profileData?.last_name || ''}
-						</div>
+		<ul id="user-info" class="medium-space list">
+			<li id="name">
+				<i>id_card</i>
+				<div class="max">
+					<h6 class="small">الاسم</h6>
+					<div>
+						{profileData?.first_name || ''}
+						{profileData?.last_name || ''}
 					</div>
-				</li>
-				<li id="email">
-					<i>mail</i>
-					<div class="max">
-						<h6 class="small">البريد الإلكتروني</h6>
-						<div>
-							{user?.email || ''}
-						</div>
+				</div>
+			</li>
+			<li id="email">
+				<i>mail</i>
+				<div class="max">
+					<h6 class="small">البريد الإلكتروني</h6>
+					<div>
+						{user?.email || ''}
 					</div>
-				</li>
-			</ul>
+				</div>
+			</li>
+		</ul>
 
-			<div class="grid" style="padding-inline: 1rem;">
-				<a id="edit-profile" href={resolve('/profile/edit')} class="button responsive s12 m6">
-					<i>edit</i>
-					<span>تعديل الملف الشخصي</span>
-				</a>
+		<div class="grid">
+			<a id="edit-profile" href={resolve('/profile/edit')} class="button responsive s12 m6 l4">
+				<i>edit</i>
+				<span>تعديل الملف الشخصي</span>
+			</a>
 
-				<a id="my-lists" href={resolve('/profile/listings')} class="responsive button s12 m6">
-					<i>other_houses</i>
-					<span>إعلاناتي</span>
-				</a>
+			<a id="my-lists" href={resolve('/profile/listings')} class="responsive button s12 m6 l4">
+				<i>other_houses</i>
+				<span>إعلاناتي</span>
+			</a>
 
-				<button id="logout-button" onclick={handleLogout} class="button responsive s12 m6">
-					<i>logout</i>
-					<span>تسجيل الخروج</span>
-				</button>
-			</div>
+			<button id="logout-button" onclick={handleLogout} class="button responsive s12 m6 l4">
+				<i>logout</i>
+				<span>تسجيل الخروج</span>
+			</button>
 		</div>
-	{/if}
-</beer-css>
+	</div>
+{/if}

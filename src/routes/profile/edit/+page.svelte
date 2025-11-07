@@ -195,7 +195,7 @@
 
 <beer-css>
 	{#if loading}
-		<div class="flex min-h-screen items-center justify-center bg-base-200">
+		<div class="bg-base-200 flex min-h-screen items-center justify-center">
 			<span class="loading loading-lg loading-spinner"></span>
 		</div>
 	{:else}
@@ -251,12 +251,13 @@
 		<div id="name">
 			<h4 class="card-title text-base">الاسم</h4>
 
-			<div class="field max label">
+			<!-- Border here is valid for both tailwindcss and beercss which creates two conflicting borders. Therefore, we also set border-0 to remove tailwind border -->
+			<div class="field max label border border-0">
 				<input id="firstName" bind:value={firstName} required />
 				<label for="firstName">الاسم الأول *</label>
 			</div>
 
-			<div class="field max label">
+			<div class="field max label border border-0">
 				<input id="lastName" bind:value={lastName} required />
 				<label for="lastName">الاسم الأخير *</label>
 			</div>

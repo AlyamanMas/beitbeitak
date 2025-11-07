@@ -84,7 +84,7 @@
 			<div class="relative">
 				<button
 					onclick={() => (showTownFilter = !showTownFilter)}
-					class="btn gap-2 btn-outline btn-sm"
+					class="btn btn-outline btn-sm gap-2"
 				>
 					<House size={16} />
 					{selectedTown ? getTownNameArabic(selectedTown) : 'المنطقة'}
@@ -99,7 +99,7 @@
 						tabindex="-1"
 					></div>
 					<div
-						class="absolute right-0 z-20 mt-2 w-52 rounded-lg border border-base-300 bg-base-100 p-2 shadow-lg"
+						class="border-base-300 bg-base-100 absolute right-0 z-20 mt-2 w-52 rounded-lg border p-2 shadow-lg"
 					>
 						<ul class="menu overflow-y-auto p-0">
 							<li>
@@ -132,7 +132,7 @@
 			</div>
 
 			<!-- All Filters Button -->
-			<button onclick={() => (showFilters = true)} class="btn gap-2 btn-outline btn-sm">
+			<button onclick={() => (showFilters = true)} class="btn btn-outline btn-sm gap-2">
 				<SlidersHorizontal size={16} />
 				المزيد
 				{#if activeFiltersCount() > 0}
@@ -159,10 +159,10 @@
 			tabindex="-1"
 		></div>
 		<!-- Drawer Panel -->
-		<div class="fixed inset-y-0 right-0 z-[70] w-full max-w-sm bg-base-100 shadow-xl">
+		<div class="bg-base-100 fixed inset-y-0 right-0 z-[70] w-full max-w-sm shadow-xl">
 			<div class="flex h-full flex-col">
 				<!-- Header -->
-				<div class="flex items-center justify-between border-b border-base-300 p-4">
+				<div class="border-base-300 flex items-center justify-between border-b p-4">
 					<h2 class="text-xl font-bold">تصفية النتائج</h2>
 					<button
 						onclick={() => (showFilters = false)}
@@ -263,10 +263,10 @@
 				</div>
 
 				<!-- Footer Actions -->
-				<div class="border-t border-base-300 p-4">
+				<div class="border-base-300 border-t p-4">
 					<div class="flex gap-2">
-						<button onclick={resetFilters} class="btn flex-1 btn-ghost"> إعادة تعيين </button>
-						<button onclick={() => (showFilters = false)} class="btn flex-1 btn-primary">
+						<button onclick={resetFilters} class="btn btn-ghost flex-1"> إعادة تعيين </button>
+						<button onclick={() => (showFilters = false)} class="btn btn-primary flex-1">
 							تطبيق
 						</button>
 					</div>
@@ -293,7 +293,7 @@
 				{/each}
 			{:else}
 				<div class="py-12 text-center">
-					<p class="text-lg text-base-content/60">
+					<p class="text-base-content/60 text-lg">
 						<!-- TODO: translate into Arabic -->
 						Ran into an error. Please contact the system administrator. error: {listings.error}
 					</p>

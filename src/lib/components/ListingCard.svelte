@@ -4,7 +4,10 @@
 	import { getTownNameArabic } from '$lib/towns.js';
 	import 'beercss/custom-element';
 
-	const { /** @type {HouseListing} */ listing } = $props();
+	/**
+	 * @type {{ listing: HouseListing }}
+	 */
+	const { listing } = $props();
 
 	/**
 	 * Get public URL for an image from Supabase storage
@@ -30,7 +33,8 @@
 	let properties = [
 		['home', getTownNameArabic(listing.town)],
 		['activity_zone', `${listing.size_m2} م²`],
-		['bedroom_parent', `${listing.num_bathrooms} غرفة`],
+		['bedroom_parent', `${listing.num_bedrooms} غرفة`],
+		['bathroom', `${listing.num_bathrooms} حمام`],
 		['location_on', listing.address]
 	];
 </script>

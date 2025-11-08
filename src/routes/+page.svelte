@@ -197,46 +197,43 @@
 
 	<dialog id="filters-dialog" class="bottom">
 		<h5>تصفية النتائج</h5>
-		<div class="small-space"></div>
 
-		<div class="scroll">
-			<!-- Price Range -->
-			<div class="field label border">
-				<input id="min-price" type="number" placeholder=" " bind:value={tempMinPrice} />
-				<label for="min-price">الحد الأدنى للسعر</label>
-			</div>
+		<!-- Price Range -->
+		<div class="field label border">
+			<input id="min-price" type="number" placeholder=" " bind:value={tempMinPrice} />
+			<label for="min-price">الحد الأدنى للسعر</label>
+		</div>
 
-			<div class="field label border">
-				<input id="max-price" type="number" placeholder=" " bind:value={tempMaxPrice} />
-				<label for="max-price">الحد الأقصى للسعر</label>
-			</div>
+		<div class="field label border">
+			<input id="max-price" type="number" placeholder=" " bind:value={tempMaxPrice} />
+			<label for="max-price">الحد الأقصى للسعر</label>
+		</div>
 
-			<!-- Bedrooms Filter -->
-			<div class="field label border">
-				<select id="bedrooms" bind:value={tempNumBedrooms}>
-					<option value="">أي عدد</option>
-					<option value="0">استوديو</option>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5+</option>
-				</select>
-				<label for="bedrooms">عدد غرف النوم</label>
-			</div>
+		<!-- Bedrooms Filter -->
+		<div class="field label border">
+			<select id="bedrooms" bind:value={tempNumBedrooms}>
+				<option value="">أي عدد</option>
+				<option value="0">استوديو</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5+</option>
+			</select>
+			<label for="bedrooms">عدد غرف النوم</label>
+		</div>
 
-			<!-- Bathrooms Filter -->
-			<div class="field label border">
-				<select id="bathrooms" bind:value={tempNumBathrooms}>
-					<option value="">أي عدد</option>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5+</option>
-				</select>
-				<label for="bathrooms">عدد الحمامات</label>
-			</div>
+		<!-- Bathrooms Filter -->
+		<div class="field label border">
+			<select id="bathrooms" bind:value={tempNumBathrooms}>
+				<option value="">أي عدد</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5+</option>
+			</select>
+			<label for="bathrooms">عدد الحمامات</label>
 		</div>
 
 		<nav>

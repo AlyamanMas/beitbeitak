@@ -97,12 +97,11 @@
 
 {#if data.listing.listing_to_pic && data.listing.listing_to_pic.length > 0}
 	<div class="relative" role="region" aria-label="معرض الصور">
-		<div class="round aspect-video w-full">
+		<div class="small-round">
 			<img
 				src={getImageUrl(data.listing.listing_to_pic[currentImageIndex].pic_name)}
 				alt="صورة العقار"
-				class="max"
-				style="object-fit: cover;"
+				class="center h-60 object-cover"
 			/>
 		</div>
 

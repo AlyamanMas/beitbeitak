@@ -19,7 +19,7 @@ export const townNamesArabic = {
 	'Al-Adawiyah': 'العدوية'
 };
 
-export const towns = Object.keys(townNamesArabic);
+export const towns = /** @type(Town[]) */ (Object.keys(townNamesArabic));
 
 /**
  * Get Arabic town name from English name

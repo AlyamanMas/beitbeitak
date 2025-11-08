@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@source not inline("{hover:,focus:,}fixed");
+@source not inline("border");
 
 /* Arabic font support */
 body,

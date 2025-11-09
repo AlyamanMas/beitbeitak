@@ -38,17 +38,18 @@
 </script>
 
 {#if loading}
-	<div class="flex min-h-screen items-center justify-center">
-		<div class="shape loading-indicator extra"></div>
-	</div>
+	<main class="responsive">
+		<div class="flex min-h-screen items-center justify-center">
+			<div class="shape loading-indicator extra"></div>
+		</div>
+	</main>
 {:else}
-	<div id="page" dir="rtl">
-		<header>
-			<nav>
-				<h6>الملف الشخصي</h6>
-			</nav>
-		</header>
-
+	<header>
+		<nav>
+			<h6>الملف الشخصي</h6>
+		</nav>
+	</header>
+	<main class="responsive">
 		<Avatar name={profileData} {profilePicUrl} />
 
 		<ul id="user-info" class="medium-space list">
@@ -89,5 +90,5 @@
 				<span>تسجيل الخروج</span>
 			</button>
 		</div>
-	</div>
+	</main>
 {/if}

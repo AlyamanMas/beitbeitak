@@ -149,28 +149,28 @@
 	});
 </script>
 
-<div>
-	<header>
-		<nav>
-			<h6 class="max">البيت بيتك</h6>
-			<nav class="group split">
-				<button class="left-round transparent" data-ui="#town-dialog">
-					<i>location_city</i>
-					<span>المنطقة</span>
-					{#if selectedTowns.length > 0}
-						<div class="badge">{selectedTowns.length}</div>
-					{/if}
-				</button>
-				<button class="right-round square transparent" data-ui="#filters-dialog">
-					<i>filter_list</i>
-					{#if activeFiltersCount() > 0}
-						<div class="badge">{activeFiltersCount()}</div>
-					{/if}
-				</button>
-			</nav>
+<header class="fixed fill">
+	<nav>
+		<h6 class="max">البيت بيتك</h6>
+		<nav class="group split">
+			<button class="left-round transparent" data-ui="#town-dialog">
+				<i>location_city</i>
+				<span>المنطقة</span>
+				{#if selectedTowns.length > 0}
+					<div class="badge">{selectedTowns.length}</div>
+				{/if}
+			</button>
+			<button class="right-round square transparent" data-ui="#filters-dialog">
+				<i>filter_list</i>
+				{#if activeFiltersCount() > 0}
+					<div class="badge">{activeFiltersCount()}</div>
+				{/if}
+			</button>
 		</nav>
-	</header>
+	</nav>
+</header>
 
+<main class="responsive">
 	<dialog id="town-dialog" class="bottom">
 		<h5>اختر المناطق</h5>
 		<div class="small-space"></div>
@@ -276,4 +276,4 @@
 	>
 		<i>add</i>
 	</button>
-</div>
+</main>

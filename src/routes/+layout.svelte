@@ -24,7 +24,5 @@
 		<BottomNav />
 	{/if}
 
-	<main class="responsive">
-		{@render children?.()}
-	</main>
+	{@render children?.()}
 </div>

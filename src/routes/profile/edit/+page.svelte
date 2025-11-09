@@ -193,23 +193,25 @@
 	}
 </script>
 
-<beer-css>
-	{#if loading}
+{#if loading}
+	<main class="responsive">
 		<div class="bg-base-200 flex min-h-screen items-center justify-center">
 			<span class="loading loading-lg loading-spinner"></span>
 		</div>
-	{:else}
-		<header>
-			<nav>
-				<button class="transparent">
-					<a href={resolve('/')}>
-						<i>arrow_forward</i>
-						<span>العودة إلى القائمة</span>
-					</a>
-				</button>
-			</nav>
-		</header>
+	</main>
+{:else}
+	<header class="fixed">
+		<nav>
+			<button class="transparent">
+				<a href={resolve('/')}>
+					<i>arrow_forward</i>
+					<span>العودة إلى القائمة</span>
+				</a>
+			</button>
+		</nav>
+	</header>
 
+	<main class="responsive">
 		<!-- <h4>الصورة الشخصية</h4> -->
 		<Avatar
 			name={{ first_name: firstName, last_name: lastName }}
@@ -280,5 +282,5 @@
 				<span> حفظ التغييرات </span>
 			{/if}
 		</button>
-	{/if}
-</beer-css>
+	</main>
+{/if}

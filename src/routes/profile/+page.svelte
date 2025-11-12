@@ -46,7 +46,7 @@
 {:else}
 	<header>
 		<nav>
-			<h6>الملف الشخصي</h6>
+			<h6 class="select-none">الملف الشخصي</h6>
 		</nav>
 	</header>
 	<main class="responsive">
@@ -56,7 +56,7 @@
 			<li id="name">
 				<i>id_card</i>
 				<div class="max">
-					<h6 class="small">الاسم</h6>
+					<h6 class="small select-none">الاسم</h6>
 					<div>
 						{profileData?.first_name || ''}
 						{profileData?.last_name || ''}
@@ -66,7 +66,7 @@
 			<li id="email">
 				<i>mail</i>
 				<div class="max">
-					<h6 class="small">البريد الإلكتروني</h6>
+					<h6 class="small select-none">البريد الإلكتروني</h6>
 					<div>
 						{user?.email || ''}
 					</div>
@@ -74,7 +74,7 @@
 			</li>
 		</ul>
 
-		<div class="grid">
+		<div class="grid" style="gap: 0.5rem;">
 			<a id="edit-profile" href={resolve('/profile/edit')} class="button responsive s12 m6 l4">
 				<i>edit</i>
 				<span>تعديل الملف الشخصي</span>

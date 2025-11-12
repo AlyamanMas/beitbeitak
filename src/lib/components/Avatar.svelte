@@ -22,7 +22,7 @@
 		</div>
 	{:else}
 		<article class="circle extra primary no-elevate h-30 w-30 overflow-clip">
-			<h1 class="middle-align tiny-line h-full">
+			<h1 class="middle-align tiny-line h-full select-none">
 				{name.first_name.charAt(0) || 'م'}{name.last_name.charAt(0) || 'أ'}
 			</h1>
 		</article>

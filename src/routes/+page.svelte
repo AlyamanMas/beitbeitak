@@ -151,13 +151,14 @@
 
 <header class="fixed fill">
 	<nav>
-		<h6 class="max">البيت بيتك</h6>
+		<h6 class="max select-none">البيت بيتك</h6>
 		<nav class="group split">
 			<button class="left-round transparent" data-ui="#town-dialog">
 				<i>location_city</i>
 				<span>المنطقة</span>
 				{#if selectedTowns.length > 0}
-					<div class="badge">{selectedTowns.length}</div>
+					<!-- TODO: fix the translate here beercss-level -->
+					<div class="badge translate-x-7">{selectedTowns.length}</div>
 				{/if}
 			</button>
 			<button class="right-round square transparent" data-ui="#filters-dialog">

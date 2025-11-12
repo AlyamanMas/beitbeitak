@@ -133,7 +133,7 @@
 	{/if}
 
 	<div class="padding">
-		<section id="price-section">
+		<section id="price-section" class="select-none">
 			<div class="text-2xl">
 				{formatPrice(data.listing.rent_per_month, data.listing.rent_in_usd)}<span
 					class="text-base opacity-70">/شهرياً</span
@@ -144,12 +144,12 @@
 		<div class="small-space"></div>
 
 		<section id="property-details">
-			<h4>تفاصيل العقار</h4>
+			<h4 class="select-none">تفاصيل العقار</h4>
 			<div class="flex flex-wrap gap-4">
 				<div class="flex items-center gap-2">
 					<i>square_foot</i>
 					<div>
-						<div class="text-xs opacity-60">المساحة</div>
+						<div class="text-xs opacity-60 select-none">المساحة</div>
 						<div class="font-semibold">{data.listing.size_m2} م²</div>
 					</div>
 				</div>
@@ -157,7 +157,7 @@
 				<div class="flex items-center gap-2">
 					<i>bed</i>
 					<div>
-						<div class="text-xs opacity-60">غرف النوم</div>
+						<div class="text-xs opacity-60 select-none">غرف النوم</div>
 						<div class="font-semibold">{data.listing.num_bedrooms}</div>
 					</div>
 				</div>
@@ -165,7 +165,7 @@
 				<div class="flex items-center gap-2">
 					<i>bathroom</i>
 					<div>
-						<div class="text-xs opacity-60">الحمامات</div>
+						<div class="text-xs opacity-60 select-none">الحمامات</div>
 						<div class="font-semibold">{data.listing.num_bathrooms}</div>
 					</div>
 				</div>
@@ -173,7 +173,7 @@
 				<div class="flex items-center gap-2">
 					<i>home</i>
 					<div>
-						<div class="text-xs opacity-60">المنطقة</div>
+						<div class="text-xs opacity-60 select-none">المنطقة</div>
 						<div class="font-semibold">{getTownNameArabic(data.listing.town)}</div>
 					</div>
 				</div>
@@ -182,19 +182,19 @@
 
 		{#if data.listing.description}
 			<section id="description-section">
-				<h4 class="mb-3 text-lg font-semibold">الوصف</h4>
+				<h4 class="mb-3 text-lg font-semibold select-none">الوصف</h4>
 				<p>{data.listing.description}</p>
 			</section>
 		{/if}
 
 		<section id="address-section">
-			<h4 class="flex">العنوان</h4>
+			<h4 class="flex select-none">العنوان</h4>
 			<p class="text-base">{data.listing.address}</p>
 		</section>
 
 		{#if data.listing.phone_number || data.listing.source_url}
 			<section id="contact-section">
-				<h4>معلومات التواصل</h4>
+				<h4 class="select-none">معلومات التواصل</h4>
 				<div class="flex flex-col gap-2">
 					{#if data.listing.phone_number}
 						{#if data.listing.whatsapp_comm}

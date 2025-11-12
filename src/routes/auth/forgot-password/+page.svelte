@@ -1,7 +1,7 @@
 <script>
 	import { resetPassword } from '$lib/stores/authStore.svelte.js';
 	import { resolve } from '$app/paths';
-	import { ArrowRight } from 'lucide-svelte';
+	import 'beercss';
 
 	let email = $state('');
 	let error = $state('');
@@ -33,94 +33,82 @@
 	}
 </script>
 
-<div class="bg-base-200 flex min-h-screen items-center justify-center p-4" dir="rtl">
-	<div class="w-full max-w-md">
+<header class="fixed">
+	<nav>
+		<a href={resolve('/auth/login')} class="circle transparent">
+			<i>arrow_forward</i>
+		</a>
+		<h6 class="max select-none">استعادة كلمة المرور</h6>
+	</nav>
+</header>
+
+<main class="responsive center-align middle-align">
+	<div style="max-width: 28rem; width: 100%;">
 		<!-- Logo/Brand -->
-		<div class="mb-8 text-center">
-			<h1 class="text-primary mb-2 text-4xl font-bold">بيت بيتك</h1>
-			<p class="text-base-content/70">استعادة كلمة المرور</p>
-		</div>
+		<h3 class="primary-text select-none">بيت بيتك</h3>
+
+		<div class="small-space"></div>
 
 		<!-- Reset Password Form -->
-		<div class="card bg-base-100 shadow-xl">
-			<div class="card-body">
-				<!-- Back Button -->
-				<a href={resolve('/auth/login')} class="btn btn-ghost btn-sm mb-2 self-start">
-					<ArrowRight size={20} />
-					العودة إلى تسجيل الدخول
-				</a>
+		<article class="padding">
+			<h5 class="select-none">نسيت كلمة المرور؟</h5>
 
-				<h2 class="card-title mb-4 text-2xl">نسيت كلمة المرور؟</h2>
-
-				{#if success}
-					<div class="alert alert-success mb-4">
-						<div>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-6 w-6 flex-shrink-0 stroke-current"
-								fill="none"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-							<div>
-								<p class="font-bold">تم الإرسال!</p>
-								<p class="text-sm">تحقق من بريدك الإلكتروني لإعادة تعيين كلمة المرور</p>
-							</div>
-						</div>
+			{#if success}
+				<div class="green-container small-padding round">
+					<i>check_circle</i>
+					<div>
+						<div class="bold">تم الإرسال!</div>
+						<div class="small-text">تحقق من بريدك الإلكتروني لإعادة تعيين كلمة المرور</div>
 					</div>
-				{:else}
-					<p class="text-base-content/70 mb-4 text-sm">
-						أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور
-					</p>
+				</div>
 
-					{#if error}
-						<div class="alert alert-error mb-4">
-							<span>{error}</span>
-						</div>
-					{/if}
+				<a href={resolve('/auth/login')} class="button responsive">
+					<i>login</i>
+					<span>العودة إلى تسجيل الدخول</span>
+				</a>
+			{:else}
+				<p class="small-text small-opacity select-none">
+					أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور
+				</p>
 
-					<form
-						onsubmit={(e) => {
-							e.preventDefault();
-							handleResetPassword();
-						}}
-					>
-						<!-- Email -->
-						<div class="form-control w-full">
-							<label class="label" for="email">
-								<span class="label-text">البريد الإلكتروني</span>
-							</label>
-							<input
-								id="email"
-								type="email"
-								placeholder="example@email.com"
-								class="input-bordered input w-full"
-								bind:value={email}
-								disabled={loading}
-								required
-							/>
-						</div>
-
-						<!-- Submit Button -->
-						<div class="form-control mt-6">
-							<button type="submit" class="btn btn-primary w-full" disabled={loading}>
-								{#if loading}
-									<span class="loading loading-spinner"></span>
-									جاري الإرسال...
-								{:else}
-									إرسال رابط إعادة التعيين
-								{/if}
-							</button>
-						</div>
-					</form>
+				{#if error}
+					<div class="error-container small-padding round">
+						<i>error</i>
+						<span>{error}</span>
+					</div>
 				{/if}
-			</div>
-		</div>
+
+				<form
+					onsubmit={(e) => {
+						e.preventDefault();
+						handleResetPassword();
+					}}
+				>
+					<!-- Email -->
+					<div class="field label border">
+						<input
+							id="email"
+							type="email"
+							placeholder=" "
+							bind:value={email}
+							disabled={loading}
+							required
+						/>
+						<label for="email">البريد الإلكتروني</label>
+					</div>
+
+					<!-- Submit Button -->
+					<button type="submit" class="responsive" disabled={loading}>
+						{#if loading}
+							<progress class="circle small"></progress>
+							<span>جاري الإرسال...</span>
+						{:else}
+							<i>send</i>
+							<span>إرسال رابط إعادة التعيين</span>
+						{/if}
+					</button>
+				</form>
+			{/if}
+		</article>
 	</div>
-</div>
+</main>

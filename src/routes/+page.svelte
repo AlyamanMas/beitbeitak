@@ -147,9 +147,31 @@
 		if (currentNumBathrooms) count++;
 		return count;
 	});
+
+	// Scroll tracking
+	let scrolledPage = $state(false);
+	let scrolledDown = $state(false);
+	let lastScrollY = $state(0);
+
+	/**
+	 * Handle window scroll
+	 */
+	function handleScroll() {
+		const currentScrollY = window.scrollY;
+
+		// Toggle 'fill' class on header when not at top
+		scrolledPage = currentScrollY > 10;
+
+		// Toggle 'active' class on FAB when scrolling down
+		scrolledDown = currentScrollY > lastScrollY && currentScrollY > 100;
+
+		lastScrollY = currentScrollY;
+	}
 </script>
 
-<header class="fixed fill">
+<svelte:window onscroll={handleScroll} />
+
+<header class={['fixed', scrolledPage && 'fill']}>
 	<nav>
 		<h6 class="max select-none">البيت بيتك</h6>
 		<nav class="group split">
@@ -171,10 +193,14 @@
 	</nav>
 </header>
 
-<main class="responsive">
+<main
+	class="responsive"
+	onscroll={(e) => {
+		// TODO: implement. If not relevant place to implement here, then move
+	}}
+>
 	<dialog id="town-dialog" class="bottom">
-		<h5>اختر المناطق</h5>
-		<div class="small-space"></div>
+		<h5 class="select-none">اختر المناطق</h5>
 		<nav class="vertical scroll">
 			{#each towns as town (town)}
 				<label class="checkbox">
@@ -197,7 +223,7 @@
 	</dialog>
 
 	<dialog id="filters-dialog" class="bottom">
-		<h5>تصفية النتائج</h5>
+		<h5 class="select-none">تصفية النتائج</h5>
 
 		<!-- Price Range -->
 		<div class="field label border">
@@ -271,10 +297,11 @@
 
 	<button
 		id="new-post-fab"
-		class="square extra fixed bottom-22 left-2"
+		class={['square extra fixed extend bottom-22 left-2', scrolledDown && 'active']}
 		onclick={handleAddListing}
 		aria-label="إضافة إعلان"
 	>
 		<i>add</i>
+		<span>إضافة إعلان</span>
 	</button>
 </main>

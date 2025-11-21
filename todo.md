@@ -2,7 +2,6 @@
 - pagination
 - price filtration should be able to account for different currencies
 - when pressing on house image, new page for image display
-- service workers
 - report button
 - location integration with OSM/Google Maps
 - interface enhancements

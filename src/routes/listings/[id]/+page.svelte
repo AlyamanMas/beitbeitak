@@ -5,6 +5,7 @@
 	import { resolve } from '$app/paths';
 	import 'beercss/custom-element';
 	import { goto } from '$app/navigation';
+	import ui from 'beercss';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
@@ -83,6 +84,32 @@
 	 */
 	function getTelUrl(phoneNumber) {
 		return `tel:${phoneNumber}`;
+	}
+
+	let isDeleting = $state(false);
+
+	/**
+	 * Delete the current listing
+	 */
+	async function deleteListing() {
+		isDeleting = true;
+		try {
+			const { error } = await supabase.from('house_listings').delete().eq('id', data.listing.id);
+
+			if (error) {
+				console.error('Error deleting listing:', error);
+				alert('حدث خطأ أثناء حذف الإعلان');
+				isDeleting = false;
+				return;
+			}
+
+			// Navigate back to home page
+			await goto(resolve('/'));
+		} catch (err) {
+			console.error('Unexpected error:', err);
+			alert('حدث خطأ غير متوقع');
+			isDeleting = false;
+		}
 	}
 </script>
 
@@ -276,15 +303,42 @@
 		</section>
 
 		{#if isOwner()}
-			<section id="edit-section">
+			<section id="owner-actions">
 				<button
 					onclick={() => goto(resolve(`/listings/${data.listing.id}/edit`))}
-					class="responsive red"
+					class="responsive"
 				>
 					<i>edit</i>
 					<span>تعديل الإعلان</span>
+				</button>
+
+				<div class="small-space"></div>
+
+				<button data-ui="#delete-dialog" class="responsive red" disabled={isDeleting}>
+					<i>delete</i>
+					<span>{isDeleting ? 'جاري الحذف...' : 'حذف الإعلان'}</span>
 				</button>
 			</section>
 		{/if}
 	</div>
 </main>
+
+<!-- Delete confirmation dialog -->
+<dialog id="delete-dialog" class="modal">
+	<h5>تأكيد الحذف</h5>
+	<p>هل أنت متأكد من رغبتك في حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.</p>
+	<nav class="right-align">
+		<button data-ui="#delete-dialog" class="border">إلغاء</button>
+		<button
+			onclick={async () => {
+				// Close dialog first
+				ui('#delete-dialog');
+				await deleteListing();
+			}}
+			class="red"
+			disabled={isDeleting}
+		>
+			حذف
+		</button>
+	</nav>
+</dialog>

@@ -193,12 +193,7 @@
 	</nav>
 </header>
 
-<main
-	class="responsive"
-	onscroll={(e) => {
-		// TODO: implement. If not relevant place to implement here, then move
-	}}
->
+<main class="responsive">
 	<dialog id="town-dialog" class="bottom">
 		<h5 class="select-none">اختر المناطق</h5>
 		<nav class="vertical scroll">

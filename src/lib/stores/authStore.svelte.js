@@ -143,6 +143,18 @@ export async function resetPassword(email) {
 }
 
 /**
+ * Update user password (for password reset flow)
+ * @param {string} newPassword
+ * @returns {Promise<{error: any}>}
+ */
+export async function updatePassword(newPassword) {
+	const { error } = await supabase.auth.updateUser({
+		password: newPassword
+	});
+	return { error };
+}
+
+/**
  * Get the current user
  * @returns {import('@supabase/supabase-js').User | null}
  */

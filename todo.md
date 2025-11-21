@@ -1,7 +1,8 @@
+- ability to delete posts
+- fix towns names and lists
 - pagination
 - price filtration should be able to account for different currencies
 - when pressing on house image, new page for image display
-- ability to delete posts
 - service workers
 - report button
 - location integration with OSM/Google Maps
@@ -9,12 +10,9 @@
 - branding
 - log in with google
 - smtp
-- reset password
 - ability to upload videos?
 - pc ui
 - facebook scraping
 - search function
 - move to local supabase
-- fix towns names and lists
 - refactor codebase
-- fix smtp and forget password page

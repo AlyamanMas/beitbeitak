@@ -167,6 +167,30 @@
 
 		lastScrollY = currentScrollY;
 	}
+	/**
+	 * Chunks an array into smaller arrays of a specified size.
+	 *
+	 * @param {Array<T>} arr - The array to process and chunk.
+	 * @param {number} [size=3] - The maximum size of each chunk. Defaults to 3.
+	 * @returns {Array<Array<T>>} A new array containing the chunked subarrays.
+	 * @template T
+	 *
+	 * @example
+	 * // returns [[1, 2, 3], [4, 5, 6], [7]]
+	 * chunkArrayForLoop([1, 2, 3, 4, 5, 6, 7], 3);
+	 *
+	 * @example
+	 * // returns [['a', 'b'], ['c', 'd']]
+	 * chunkArrayForLoop(['a', 'b', 'c', 'd'], 2);
+	 */
+	function chunkArrayForLoop(arr, size = 3) {
+		const chunkedArray = [];
+		for (let i = 0; i < arr.length; i += size) {
+			chunkedArray.push(arr.slice(i, i + size));
+		}
+		return chunkedArray;
+	}
+	const townsThrees = chunkArrayForLoop(towns, 3);
 </script>
 
 <svelte:window onscroll={handleScroll} />
@@ -194,27 +218,64 @@
 </header>
 
 <main class="responsive">
-	<dialog id="town-dialog" class="bottom">
-		<h5 class="select-none">اختر المناطق</h5>
-		<nav class="vertical scroll">
-			{#each towns as town (town)}
-				<label class="checkbox">
-					<input
-						type="checkbox"
-						checked={tempSelectedTowns.includes(town)}
-						onchange={() => toggleTownSelection(town)}
-					/>
-					<span>{getTownNameArabic(town)}</span>
-				</label>
-			{/each}
-		</nav>
+	<dialog id="town-dialog" class="bottom" style="max-height: 80dvh;">
+		<header class="fixed">
+			<nav>
+				<h5 class="select-none">اختر المناطق</h5>
+			</nav>
+		</header>
+		{#each townsThrees as townTriple, index (index)}
+			<nav class="group connected grid" style="margin-top: 0.125rem !important;">
+				{#if townTriple.length === 1}
+					<button
+						class={[
+							's12 border responsive round small-text',
+							tempSelectedTowns.includes(townTriple[0]) && 'active'
+						]}
+						onclick={() => toggleTownSelection(townTriple[0])}
+					>
+						{getTownNameArabic(townTriple[0])}
+					</button>
+				{:else if townTriple.length === 2}
+					{#each townTriple as town, townIndex (townIndex)}
+						<button
+							class={[
+								's6 no-round border responsive small-text',
+								townIndex === 0 && 'left-round',
+								townIndex === 1 && 'right-round',
+								tempSelectedTowns.includes(town) && 'active'
+							]}
+							onclick={() => toggleTownSelection(town)}
+						>
+							{getTownNameArabic(town)}
+						</button>
+					{/each}
+				{:else}
+					{#each townTriple as town, townIndex (townIndex)}
+						<button
+							class={[
+								's4 no-round border responsive small-text',
+								townIndex === 0 && 'left-round',
+								townIndex === 2 && 'right-round',
+								tempSelectedTowns.includes(town) && 'active'
+							]}
+							onclick={() => toggleTownSelection(town)}
+						>
+							{getTownNameArabic(town)}
+						</button>
+					{/each}
+				{/if}
+			</nav>
+		{/each}
 
-		<nav>
-			<button class="border" data-ui="#town-dialog" onclick={resetTownFilters}>
-				إعادة تعيين
-			</button>
-			<button data-ui="#town-dialog" onclick={applyTownFilters}> تطبيق </button>
-		</nav>
+		<footer class="fixed">
+			<nav>
+				<button class="border" data-ui="#town-dialog" onclick={resetTownFilters}>
+					إعادة تعيين
+				</button>
+				<button data-ui="#town-dialog" onclick={applyTownFilters}> تطبيق </button>
+			</nav>
+		</footer>
 	</dialog>
 
 	<dialog id="filters-dialog" class="bottom">

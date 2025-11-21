@@ -1,9 +1,8 @@
 <script>
 	import { supabase } from '$lib/supabaseClient.js';
-	import { getTownNameArabic, townNamesArabic } from '$lib/towns.js';
+	import { getTownNameArabic, towns } from '$lib/towns.js';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { Upload, X, Save, ArrowRight, Loader, Trash2 } from 'lucide-svelte';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
@@ -220,260 +219,221 @@
 	}
 </script>
 
-<div class="min-h-screen bg-base-200 pb-24" dir="rtl">
-	<!-- Header -->
-	<div class="sticky top-0 z-10 bg-base-100 p-4 shadow-sm">
-		<div class="flex items-center gap-3">
-			<a href={resolve(`/listings/${data.listing.id}`)} class="btn btn-circle btn-ghost btn-sm">
-				<ArrowRight size={20} />
-			</a>
-			<h1 class="text-xl font-bold">تعديل الإعلان</h1>
-		</div>
-	</div>
+<header class="fixed">
+	<nav>
+		<a href={resolve(`/listings/${data.listing.id}`)} class="circle transparent">
+			<i>arrow_forward</i>
+		</a>
+		<h6 class="max">تعديل الإعلان</h6>
+	</nav>
+</header>
 
-	<!-- Form -->
-	<div class="container mx-auto max-w-2xl p-4">
-		<form
-			onsubmit={(e) => {
-				e.preventDefault();
-				handleSubmit();
-			}}
-			class="space-y-4"
-		>
+<main class="responsive">
+	<form
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+	>
+		<ul class="list border no-space">
 			<!-- Town Selection -->
-			<div class="card bg-base-100 shadow-md">
-				<div class="card-body p-4">
-					<h2 class="card-title text-base">المنطقة *</h2>
-					<select bind:value={town} class="select-bordered select w-full" required>
-						<option value="" disabled>اختر المنطقة</option>
-						{#each Object.keys(townNamesArabic) as townKey}
-							<option value={townKey}>{getTownNameArabic(townKey)}</option>
-						{/each}
-					</select>
-				</div>
-			</div>
-
-			<!-- Rent -->
-			<div class="card bg-base-100 shadow-md">
-				<div class="card-body p-4">
-					<h2 class="card-title text-base">الإيجار الشهري *</h2>
-					<div class="space-y-3">
-						<input
-							type="number"
-							bind:value={rentPerMonth}
-							placeholder="مثال: 500000"
-							class="input-bordered input w-full"
-							required
-							min="1"
-						/>
-						<div class="form-control">
-							<label class="label cursor-pointer justify-start gap-3">
-								<input type="checkbox" bind:checked={rentInUsd} class="checkbox" />
-								<span class="label-text">الإيجار بالدولار الأمريكي</span>
-							</label>
-						</div>
+			<li>
+				<div class="max">
+					<h6 class="small">المنطقة *</h6>
+					<div class="field label border">
+						<select bind:value={town} required>
+							<option value="" disabled>اختر المنطقة</option>
+							{#each towns as townKey (townKey)}
+								<option value={townKey}>{getTownNameArabic(townKey)}</option>
+							{/each}
+						</select>
+						<label>المنطقة</label>
 					</div>
 				</div>
-			</div>
+			</li>
+
+			<!-- Rent -->
+			<li>
+				<div class="max">
+					<h6 class="small">الإيجار الشهري *</h6>
+					<div class="field label border">
+						<input type="number" bind:value={rentPerMonth} placeholder=" " required min="1" />
+						<label>الإيجار الشهري</label>
+					</div>
+					<label class="checkbox">
+						<input type="checkbox" bind:checked={rentInUsd} />
+						<span>الإيجار بالدولار الأمريكي</span>
+					</label>
+				</div>
+			</li>
 
 			<!-- Property Details -->
-			<div class="card bg-base-100 shadow-md">
-				<div class="card-body space-y-3 p-4">
-					<h2 class="card-title text-base">تفاصيل العقار</h2>
+			<li>
+				<div class="max">
+					<h6 class="small">تفاصيل العقار</h6>
 
 					<!-- Size -->
-					<div class="form-control">
-						<label class="label" for="size">
-							<span class="label-text">المساحة (م²) *</span>
-						</label>
-						<input
-							id="size"
-							type="number"
-							bind:value={sizeM2}
-							placeholder="مثال: 120"
-							class="input-bordered input"
-							required
-							min="1"
-						/>
+					<div class="field label border">
+						<input id="size" type="number" bind:value={sizeM2} placeholder=" " required min="1" />
+						<label for="size">المساحة (م²) *</label>
 					</div>
 
 					<!-- Bedrooms -->
-					<div class="form-control">
-						<label class="label" for="bedrooms">
-							<span class="label-text">عدد غرف النوم *</span>
-						</label>
+					<div class="field label border">
 						<input
 							id="bedrooms"
 							type="number"
 							bind:value={numBedrooms}
-							class="input-bordered input"
+							placeholder=" "
 							required
 							min="0"
 						/>
+						<label for="bedrooms">عدد غرف النوم *</label>
 					</div>
 
 					<!-- Bathrooms -->
-					<div class="form-control">
-						<label class="label" for="bathrooms">
-							<span class="label-text">عدد الحمامات *</span>
-						</label>
+					<div class="field label border">
 						<input
 							id="bathrooms"
 							type="number"
 							bind:value={numBathrooms}
-							class="input-bordered input"
+							placeholder=" "
 							required
 							min="0"
 						/>
+						<label for="bathrooms">عدد الحمامات *</label>
 					</div>
 				</div>
-			</div>
+			</li>
 
 			<!-- Address -->
-			<div class="card bg-base-100 shadow-md">
-				<div class="card-body p-4">
-					<h2 class="card-title text-base">العنوان *</h2>
-					<textarea
-						bind:value={address}
-						placeholder="أدخل العنوان التفصيلي للعقار"
-						class="textarea-bordered textarea w-full"
-						rows="3"
-						required
-					></textarea>
+			<li>
+				<div class="max">
+					<h6 class="small">العنوان *</h6>
+					<div class="field textarea label border">
+						<textarea bind:value={address} placeholder=" " rows="3" required></textarea>
+						<label>العنوان التفصيلي للعقار</label>
+					</div>
 				</div>
-			</div>
+			</li>
 
 			<!-- Contact Information -->
-			<div class="card bg-base-100 shadow-md">
-				<div class="card-body space-y-3 p-4">
-					<h2 class="card-title text-base">معلومات التواصل</h2>
+			<li>
+				<div class="max">
+					<h6 class="small">معلومات التواصل</h6>
 
 					<!-- Phone Number -->
-					<div class="form-control">
-						<label class="label" for="phone">
-							<span class="label-text">رقم الهاتف</span>
-						</label>
-						<input
-							id="phone"
-							type="tel"
-							bind:value={phoneNumber}
-							placeholder="مثال: +963123456789"
-							class="input-bordered input"
-						/>
+					<div class="field label border">
+						<input id="phone" type="tel" bind:value={phoneNumber} placeholder=" " />
+						<label for="phone">رقم الهاتف</label>
 					</div>
 
 					{#if phoneNumber}
-						<div class="form-control">
-							<label class="label cursor-pointer justify-start gap-3">
-								<input type="checkbox" bind:checked={whatsappComm} class="checkbox" />
-								<span class="label-text">التواصل عبر واتساب</span>
-							</label>
-						</div>
+						<label class="checkbox">
+							<input type="checkbox" bind:checked={whatsappComm} />
+							<span>التواصل عبر واتساب</span>
+						</label>
 					{/if}
 
 					<!-- Source URL -->
-					<div class="form-control">
-						<label class="label" for="source">
-							<span class="label-text">رابط المصدر (اختياري)</span>
-						</label>
-						<input
-							id="source"
-							type="url"
-							bind:value={sourceUrl}
-							placeholder="مثال: https://facebook.com/..."
-							class="input-bordered input"
-						/>
+					<div class="field label border">
+						<input id="source" type="url" bind:value={sourceUrl} placeholder=" " />
+						<label for="source">رابط المصدر (اختياري)</label>
 					</div>
 				</div>
-			</div>
+			</li>
 
 			<!-- Images -->
-			<div class="card bg-base-100 shadow-md">
-				<div class="card-body p-4">
-					<h2 class="card-title text-base">الصور *</h2>
+			<li>
+				<div class="max">
+					<h6 class="small">الصور *</h6>
 
 					<!-- Existing Images -->
 					{#if existingImages.length > 0}
-						<div class="mb-3">
-							<p class="mb-2 text-sm text-base-content/70">الصور الحالية:</p>
-							<div class="grid grid-cols-3 gap-2">
-								{#each existingImages as img, index}
-									<div class="relative aspect-square">
+						<p class="small-text">الصور الحالية:</p>
+						<div class="grid">
+							{#each existingImages as img, index (index)}
+								<div class="s4 m3 l2">
+									<div style="position: relative; aspect-ratio: 1;">
 										<img
 											src={getImageUrl(img.pic_name)}
 											alt="صورة موجودة {index + 1}"
-											class="h-full w-full rounded-lg object-cover"
+											class="round responsive"
+											style="width: 100%; height: 100%; object-fit: cover;"
 										/>
 										<button
 											type="button"
 											onclick={() => removeExistingImage(index)}
-											class="btn absolute -top-2 -left-2 btn-circle btn-xs btn-error"
+											class="circle extra error top right absolute"
+											style="margin: -0.5rem;"
 										>
-											<X size={14} />
+											<i>close</i>
 										</button>
 									</div>
-								{/each}
-							</div>
+								</div>
+							{/each}
 						</div>
 					{/if}
 
 					<!-- File Input -->
-					<label class="btn w-full btn-outline">
-						<Upload size={20} />
-						إضافة صور جديدة
+					<label class="button border responsive">
+						<i>upload</i>
+						<span>إضافة صور جديدة</span>
 						<input
 							type="file"
 							accept="image/*"
 							multiple
 							onchange={handleFileSelect}
-							class="hidden"
+							style="display: none;"
 						/>
 					</label>
 
 					<!-- New Images Preview -->
 					{#if newPreviewUrls.length > 0}
-						<div class="mt-3">
-							<p class="mb-2 text-sm text-base-content/70">صور جديدة:</p>
-							<div class="grid grid-cols-3 gap-2">
-								{#each newPreviewUrls as url, index}
-									<div class="relative aspect-square">
+						<p class="small-text">صور جديدة:</p>
+						<div class="grid">
+							{#each newPreviewUrls as url, index (index)}
+								<div class="s4 m3 l2">
+									<div style="position: relative; aspect-ratio: 1;">
 										<img
 											src={url}
 											alt="صورة جديدة {index + 1}"
-											class="h-full w-full rounded-lg object-cover"
+											class="round responsive"
+											style="width: 100%; height: 100%; object-fit: cover;"
 										/>
 										<button
 											type="button"
 											onclick={() => removeNewFile(index)}
-											class="btn absolute -top-2 -left-2 btn-circle btn-xs btn-error"
+											class="circle extra error top right absolute"
+											style="margin: -0.5rem;"
 										>
-											<X size={14} />
+											<i>close</i>
 										</button>
 									</div>
-								{/each}
-							</div>
+								</div>
+							{/each}
 						</div>
 					{/if}
 				</div>
+			</li>
+		</ul>
+
+		<!-- Error Message -->
+		{#if errorMessage}
+			<div class="small-padding">
+				<p class="error-text">{errorMessage}</p>
 			</div>
+		{/if}
 
-			<!-- Error Message -->
-			{#if errorMessage}
-				<div class="alert alert-error">
-					<span>{errorMessage}</span>
-				</div>
+		<!-- Submit Button -->
+		<button type="submit" disabled={isSubmitting} class="responsive">
+			{#if isSubmitting}
+				<progress class="circle small"></progress>
+				<span>جاري التحديث...</span>
+			{:else}
+				<i>save</i>
+				<span>حفظ التعديلات</span>
 			{/if}
-
-			<!-- Submit Button -->
-			<button type="submit" disabled={isSubmitting} class="btn w-full btn-primary">
-				{#if isSubmitting}
-					<Loader size={20} class="animate-spin" />
-					جاري التحديث...
-				{:else}
-					<Save size={20} />
-					حفظ التعديلات
-				{/if}
-			</button>
-		</form>
-	</div>
-</div>
+		</button>
+	</form>
+</main>

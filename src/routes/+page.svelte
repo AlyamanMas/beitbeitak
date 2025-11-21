@@ -1,11 +1,12 @@
 <script>
-	import { getTownNameArabic } from '$lib/towns.js';
+	import { getTownNameArabic, towns } from '$lib/towns.js';
 	import { isAuthenticated } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import ListingCard from '$lib/components/ListingCard.svelte';
-	import { SlidersHorizontal, House, X } from 'lucide-svelte';
-	import 'beercss/custom-element';
+	import 'beercss';
+	import { SvelteURLSearchParams } from 'svelte/reactivity';
 
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
@@ -21,297 +22,286 @@
 		}
 	}
 
-	// Filter states
-	let showFilters = $state(false);
-	let showTownFilter = $state(false);
-	let selectedTown = $state('');
-	let minPrice = $state(0);
-	let maxPrice = $state(10000000);
-	let minBedrooms = $state(0);
-	let minBathrooms = $state(0);
+	// Read current filters from URL
+	let selectedTowns = /** @type(import('$lib/towns.js').Town[]) */ (
+		$derived(page.url.searchParams.getAll('town'))
+	);
+	let currentMinPrice = $derived(page.url.searchParams.get('minPrice') || '');
+	let currentMaxPrice = $derived(page.url.searchParams.get('maxPrice') || '');
+	let currentNumBedrooms = $derived(page.url.searchParams.get('numBedrooms') || '');
+	let currentNumBathrooms = $derived(page.url.searchParams.get('numBathrooms') || '');
 
-	/**
-	 * Filter listings based on selected criteria
-	 * @param {HouseListing[]} listings
-	 * @returns {HouseListing[]}
-	 */
-	const filterListings = (listings) => {
-		return listings.filter((listing) => {
-			if (selectedTown && listing.town !== selectedTown) return false;
-			if (listing.rent_per_month < minPrice || listing.rent_per_month > maxPrice) return false;
-			if (listing.num_bedrooms < minBedrooms) return false;
-			if (listing.num_bathrooms < minBathrooms) return false;
-			return true;
-		});
-	};
+	// Temporary filter states for dialogs (before applying)
+	let /** @type {import('$lib/towns.js').Town[]} */ tempSelectedTowns = $state([]);
+	let tempMinPrice = $state('');
+	let tempMaxPrice = $state('');
+	let tempNumBedrooms = $state('');
+	let tempNumBathrooms = $state('');
 
-	/**
-	 * Count active filters (excluding town since it has its own button)
-	 * @returns {number}
-	 */
-	let activeFiltersCount = $derived(() => {
-		let count = 0;
-		if (minPrice > 0) count++;
-		if (maxPrice < 10000000) count++;
-		if (minBedrooms > 0) count++;
-		if (minBathrooms > 0) count++;
-		return count;
+	// Sync temp values with URL params
+	$effect(() => {
+		tempSelectedTowns = [...selectedTowns];
+		tempMinPrice = currentMinPrice;
+		tempMaxPrice = currentMaxPrice;
+		tempNumBedrooms = currentNumBedrooms;
+		tempNumBathrooms = currentNumBathrooms;
 	});
 
 	/**
-	 * Reset all filters
+	 * Toggle town selection
+	 * @param {import('$lib/towns.js').Town} town
 	 */
-	function resetFilters() {
-		selectedTown = '';
-		minPrice = 0;
-		maxPrice = 10000000;
-		minBedrooms = 0;
-		minBathrooms = 0;
+	function toggleTownSelection(town) {
+		const index = tempSelectedTowns.indexOf(town);
+		if (index === -1) {
+			tempSelectedTowns = [...tempSelectedTowns, town];
+		} else {
+			tempSelectedTowns = tempSelectedTowns.filter((t) => t !== town);
+		}
+	}
+
+	/**
+	 * Apply town filters
+	 */
+	function applyTownFilters() {
+		const params = new SvelteURLSearchParams(page.url.searchParams);
+		params.delete('town');
+		tempSelectedTowns.forEach((town) => params.append('town', town));
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		goto(`?${params.toString()}`, { replaceState: false, keepFocus: true });
+	}
+
+	/**
+	 * Apply other filters (price, bedrooms, bathrooms)
+	 */
+	function applyOtherFilters() {
+		const params = new SvelteURLSearchParams(page.url.searchParams);
+
+		// Update price filters
+		if (tempMinPrice) {
+			params.set('minPrice', tempMinPrice);
+		} else {
+			params.delete('minPrice');
+		}
+
+		if (tempMaxPrice) {
+			params.set('maxPrice', tempMaxPrice);
+		} else {
+			params.delete('maxPrice');
+		}
+
+		// Update bedroom filter
+		if (tempNumBedrooms) {
+			params.set('numBedrooms', tempNumBedrooms);
+		} else {
+			params.delete('numBedrooms');
+		}
+
+		// Update bathroom filter
+		if (tempNumBathrooms) {
+			params.set('numBathrooms', tempNumBathrooms);
+		} else {
+			params.delete('numBathrooms');
+		}
+
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		goto(`?${params.toString()}`, { replaceState: false, keepFocus: true });
+	}
+
+	/**
+	 * Reset town filters
+	 */
+	function resetTownFilters() {
+		tempSelectedTowns = [];
+		const params = new SvelteURLSearchParams(page.url.searchParams);
+		params.delete('town');
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		goto(`?${params.toString()}`, { replaceState: false, keepFocus: true });
+	}
+
+	/**
+	 * Reset other filters
+	 */
+	function resetOtherFilters() {
+		tempMinPrice = '';
+		tempMaxPrice = '';
+		tempNumBedrooms = '';
+		tempNumBathrooms = '';
+		const params = new SvelteURLSearchParams(page.url.searchParams);
+		params.delete('minPrice');
+		params.delete('maxPrice');
+		params.delete('numBedrooms');
+		params.delete('numBathrooms');
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		goto(`?${params.toString()}`, { replaceState: false, keepFocus: true });
+	}
+
+	/**
+	 * Count active filters
+	 */
+	let activeFiltersCount = $derived(() => {
+		let count = 0;
+		if (currentMinPrice) count++;
+		if (currentMaxPrice) count++;
+		if (currentNumBedrooms) count++;
+		if (currentNumBathrooms) count++;
+		return count;
+	});
+
+	// Scroll tracking
+	let scrolledPage = $state(false);
+	let scrolledDown = $state(false);
+	let lastScrollY = $state(0);
+
+	/**
+	 * Handle window scroll
+	 */
+	function handleScroll() {
+		const currentScrollY = window.scrollY;
+
+		// Toggle 'fill' class on header when not at top
+		scrolledPage = currentScrollY > 10;
+
+		// Toggle 'active' class on FAB when scrolling down
+		scrolledDown = currentScrollY > lastScrollY && currentScrollY > 100;
+
+		lastScrollY = currentScrollY;
 	}
 </script>
 
-<div class="px-4 pt-4 pb-24" dir="rtl">
-	<!-- Header -->
-	<div class="mb-4">
-		<h1 class="mb-2 text-center text-3xl font-bold">البيت بيتك</h1>
-		<p class="text-center text-base-content/70">ابحث عن بيت أحلامك في حمص</p>
-	</div>
+<svelte:window onscroll={handleScroll} />
 
-	<!-- Filter Buttons -->
-	<div class="mb-4 flex items-center justify-between gap-2">
-		<div class="flex flex-1 gap-2">
-			<!-- Town Filter Button -->
-			<div class="relative">
-				<button
-					onclick={() => (showTownFilter = !showTownFilter)}
-					class="btn gap-2 btn-outline btn-sm"
-				>
-					<House size={16} />
-					{selectedTown ? getTownNameArabic(selectedTown) : 'المنطقة'}
-				</button>
-				{#if showTownFilter}
-					<!-- Dropdown overlay to close on outside click -->
-					<!-- svelte-ignore a11y_click_events_have_key_events -->
-					<div
-						class="fixed inset-0 z-10"
-						onclick={() => (showTownFilter = false)}
-						role="button"
-						tabindex="-1"
-					></div>
-					<div
-						class="absolute right-0 z-20 mt-2 w-52 rounded-lg border border-base-300 bg-base-100 p-2 shadow-lg"
-					>
-						<ul class="menu overflow-y-auto p-0">
-							<li>
-								<button
-									onclick={() => {
-										selectedTown = '';
-										showTownFilter = false;
-									}}
-									class="text-right {selectedTown === '' ? 'active' : ''}"
-								>
-									جميع المناطق
-								</button>
-							</li>
-							{#each data.towns as town (town)}
-								<li>
-									<button
-										onclick={() => {
-											selectedTown = town;
-											showTownFilter = false;
-										}}
-										class="text-right {selectedTown === town ? 'active' : ''}"
-									>
-										{getTownNameArabic(town)}
-									</button>
-								</li>
-							{/each}
-						</ul>
-					</div>
-				{/if}
-			</div>
-
-			<!-- All Filters Button -->
-			<button onclick={() => (showFilters = true)} class="btn gap-2 btn-outline btn-sm">
-				<SlidersHorizontal size={16} />
-				المزيد
-				{#if activeFiltersCount() > 0}
-					<span class="badge badge-sm badge-primary">{activeFiltersCount()}</span>
+<header class={['fixed', scrolledPage && 'fill']}>
+	<nav>
+		<h6 class="max select-none">البيت بيتك</h6>
+		<nav class="group split">
+			<button class="left-round transparent" data-ui="#town-dialog">
+				<i>location_city</i>
+				<span>المنطقة</span>
+				{#if selectedTowns.length > 0}
+					<!-- TODO: fix the translate here beercss-level -->
+					<div class="badge translate-x-7">{selectedTowns.length}</div>
 				{/if}
 			</button>
+			<button class="right-round square transparent" data-ui="#filters-dialog">
+				<i>filter_list</i>
+				{#if activeFiltersCount() > 0}
+					<div class="badge">{activeFiltersCount()}</div>
+				{/if}
+			</button>
+		</nav>
+	</nav>
+</header>
+
+<main
+	class="responsive"
+	onscroll={(e) => {
+		// TODO: implement. If not relevant place to implement here, then move
+	}}
+>
+	<dialog id="town-dialog" class="bottom">
+		<h5 class="select-none">اختر المناطق</h5>
+		<nav class="vertical scroll">
+			{#each towns as town (town)}
+				<label class="checkbox">
+					<input
+						type="checkbox"
+						checked={tempSelectedTowns.includes(town)}
+						onchange={() => toggleTownSelection(town)}
+					/>
+					<span>{getTownNameArabic(town)}</span>
+				</label>
+			{/each}
+		</nav>
+
+		<nav>
+			<button class="border" data-ui="#town-dialog" onclick={resetTownFilters}>
+				إعادة تعيين
+			</button>
+			<button data-ui="#town-dialog" onclick={applyTownFilters}> تطبيق </button>
+		</nav>
+	</dialog>
+
+	<dialog id="filters-dialog" class="bottom">
+		<h5 class="select-none">تصفية النتائج</h5>
+
+		<!-- Price Range -->
+		<div class="field label border">
+			<input id="min-price" type="number" placeholder=" " bind:value={tempMinPrice} />
+			<label for="min-price">الحد الأدنى للسعر</label>
 		</div>
 
-		{#await data.listings then listings}
-			{#if !listings.error}
-				{filterListings(listings.data).length} عقار
-			{/if}
-		{/await}
-	</div>
-
-	<!-- Filters Drawer -->
-	{#if showFilters}
-		<!-- Overlay -->
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<div
-			class="fixed inset-0 z-[60] bg-black/50"
-			onclick={() => (showFilters = false)}
-			role="button"
-			tabindex="-1"
-		></div>
-		<!-- Drawer Panel -->
-		<div class="fixed inset-y-0 right-0 z-[70] w-full max-w-sm bg-base-100 shadow-xl">
-			<div class="flex h-full flex-col">
-				<!-- Header -->
-				<div class="flex items-center justify-between border-b border-base-300 p-4">
-					<h2 class="text-xl font-bold">تصفية النتائج</h2>
-					<button
-						onclick={() => (showFilters = false)}
-						class="btn btn-circle btn-ghost btn-sm"
-						aria-label="إغلاق"
-					>
-						<X size={20} />
-					</button>
-				</div>
-
-				<!-- Filters Content -->
-				<div class="flex-1 space-y-4 overflow-y-auto p-4">
-					<!-- Town Filter -->
-					<div class="form-control w-full">
-						<label class="label" for="town-select">
-							<span class="label-text font-semibold">المنطقة</span>
-						</label>
-						<select
-							id="town-select"
-							class="select-bordered select w-full"
-							bind:value={selectedTown}
-						>
-							<option value="">جميع المناطق</option>
-							{#each data.towns as town (town)}
-								<option value={town}>{getTownNameArabic(town)}</option>
-							{/each}
-						</select>
-					</div>
-
-					<!-- Price Range -->
-					<div class="form-control w-full">
-						<label class="label" for="min-price">
-							<span class="label-text font-semibold">الحد الأدنى للسعر</span>
-						</label>
-						<input
-							id="min-price"
-							type="number"
-							placeholder="0"
-							class="input-bordered input w-full"
-							bind:value={minPrice}
-						/>
-					</div>
-
-					<div class="form-control w-full">
-						<label class="label" for="max-price">
-							<span class="label-text font-semibold">الحد الأقصى للسعر</span>
-						</label>
-						<input
-							id="max-price"
-							type="number"
-							placeholder="10000000"
-							class="input-bordered input w-full"
-							bind:value={maxPrice}
-						/>
-					</div>
-
-					<!-- Bedrooms Filter -->
-					<div class="form-control w-full">
-						<label class="label" for="bedrooms">
-							<span class="label-text font-semibold">الحد الأدنى لعدد غرف النوم: {minBedrooms}</span
-							>
-						</label>
-						<input
-							id="bedrooms"
-							type="range"
-							min="0"
-							max="10"
-							class="range range-primary"
-							bind:value={minBedrooms}
-						/>
-						<div class="flex w-full justify-between px-2 text-xs">
-							<span>0</span>
-							<span>5</span>
-							<span>10</span>
-						</div>
-					</div>
-
-					<!-- Bathrooms Filter -->
-					<div class="form-control w-full">
-						<label class="label" for="bathrooms">
-							<span class="label-text font-semibold">الحد الأدنى لعدد الحمامات: {minBathrooms}</span
-							>
-						</label>
-						<input
-							id="bathrooms"
-							type="range"
-							min="0"
-							max="5"
-							class="range range-primary"
-							bind:value={minBathrooms}
-						/>
-						<div class="flex w-full justify-between px-2 text-xs">
-							<span>0</span>
-							<span>2</span>
-							<span>5</span>
-						</div>
-					</div>
-				</div>
-
-				<!-- Footer Actions -->
-				<div class="border-t border-base-300 p-4">
-					<div class="flex gap-2">
-						<button onclick={resetFilters} class="btn flex-1 btn-ghost"> إعادة تعيين </button>
-						<button onclick={() => (showFilters = false)} class="btn flex-1 btn-primary">
-							تطبيق
-						</button>
-					</div>
-				</div>
-			</div>
+		<div class="field label border">
+			<input id="max-price" type="number" placeholder=" " bind:value={tempMaxPrice} />
+			<label for="max-price">الحد الأقصى للسعر</label>
 		</div>
-	{/if}
+
+		<!-- Bedrooms Filter -->
+		<div class="field label border">
+			<select id="bedrooms" bind:value={tempNumBedrooms}>
+				<option value="">أي عدد</option>
+				<option value="0">استوديو</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5+</option>
+			</select>
+			<label for="bedrooms">عدد غرف النوم</label>
+		</div>
+
+		<!-- Bathrooms Filter -->
+		<div class="field label border">
+			<select id="bathrooms" bind:value={tempNumBathrooms}>
+				<option value="">أي عدد</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5+</option>
+			</select>
+			<label for="bathrooms">عدد الحمامات</label>
+		</div>
+
+		<nav>
+			<button class="border" data-ui="#filters-dialog" onclick={resetOtherFilters}>
+				إعادة تعيين
+			</button>
+			<button data-ui="#filters-dialog" onclick={applyOtherFilters}>تطبيق</button>
+		</nav>
+	</dialog>
 
 	<div id="listings-grid" class="flex flex-wrap justify-center gap-4">
 		{#await data.listings}
 			<div class="flex items-center justify-center" style="min-height: calc(100vh - 20rem);">
-				<beer-css>
-					<div class="shape loading-indicator extra"></div>
-				</beer-css>
+				<div class="shape loading-indicator extra"></div>
 			</div>
 		{:then listings}
 			{#if !listings.error}
-				{#each filterListings(listings.data) as listing (listing.id)}
-					<ListingCard {listing} />
+				{#if listings.data && listings.data.length > 0}
+					{#each listings.data as listing (listing.id)}
+						<ListingCard {listing} />
+					{/each}
 				{:else}
-					<div class="text-center py-12">
-						<p class="text-lg text-base-content/60">لا توجد نتائج تطابق معايير البحث</p>
+					<div class="py-12 text-center">
+						<p class="text-lg">لا توجد نتائج تطابق معايير البحث</p>
 					</div>
-				{/each}
+				{/if}
 			{:else}
 				<div class="py-12 text-center">
-					<p class="text-lg text-base-content/60">
-						<!-- TODO: translate into Arabic -->
-						Ran into an error. Please contact the system administrator. error: {listings.error}
-					</p>
+					<p class="text-lg">حدث خطأ. يرجى التواصل مع مدير النظام.</p>
 				</div>
 			{/if}
 		{/await}
 	</div>
 
-	{#if !showFilters}
-		<beer-css>
-			<button
-				id="new-post-fab"
-				class="square extra fixed bottom-22 left-2"
-				onclick={handleAddListing}
-				aria-label="إضافة إعلان"
-			>
-				<i>add</i>
-			</button>
-		</beer-css>
-	{/if}
-</div>
+	<button
+		id="new-post-fab"
+		class={['square extra fixed extend bottom-22 left-2', scrolledDown && 'active']}
+		onclick={handleAddListing}
+		aria-label="إضافة إعلان"
+	>
+		<i>add</i>
+		<span>إضافة إعلان</span>
+	</button>
+</main>

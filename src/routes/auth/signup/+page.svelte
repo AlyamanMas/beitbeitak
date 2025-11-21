@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
+	import 'beercss';
 
 	let email = $state('');
 	let password = $state('');
@@ -56,135 +57,124 @@
 	}
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-base-200 p-4" dir="rtl">
-	<div class="w-full max-w-md">
+<header class="fixed">
+	<nav>
+		<a href={resolve('/')} class="circle transparent">
+			<i>arrow_forward</i>
+		</a>
+		<h6 class="max select-none">إنشاء حساب</h6>
+	</nav>
+</header>
+
+<main class="responsive center-align middle-align">
+	<div style="max-width: 28rem; width: 100%;">
 		<!-- Logo/Brand -->
-		<div class="mb-8 text-center">
-			<h1 class="mb-2 text-4xl font-bold text-primary">بيت بيتك</h1>
-			<p class="text-base-content/70">انضم إلينا اليوم</p>
-		</div>
+		<h3 class="primary-text select-none">بيت بيتك</h3>
 
 		<!-- Signup Form -->
-		<div class="card bg-base-100 shadow-xl">
-			<div class="card-body">
-				<h2 class="mb-4 card-title text-2xl">إنشاء حساب جديد</h2>
+		<article class="padding">
+			<h5 class="select-none">إنشاء حساب جديد</h5>
 
-				{#if error}
-					<div class="mb-4 alert alert-error">
-						<span>{error}</span>
-					</div>
-				{/if}
-
-				<form
-					onsubmit={(e) => {
-						e.preventDefault();
-						handleSignup();
-					}}
-				>
-					<!-- First Name -->
-					<div class="form-control w-full">
-						<label class="label" for="firstName">
-							<span class="label-text">الاسم الأول</span>
-						</label>
-						<input
-							id="firstName"
-							type="text"
-							placeholder="محمد"
-							class="input-bordered input w-full"
-							bind:value={firstName}
-							disabled={loading}
-							required
-						/>
-					</div>
-
-					<!-- Last Name -->
-					<div class="form-control mt-4 w-full">
-						<label class="label" for="lastName">
-							<span class="label-text">الاسم الأخير</span>
-						</label>
-						<input
-							id="lastName"
-							type="text"
-							placeholder="أحمد"
-							class="input-bordered input w-full"
-							bind:value={lastName}
-							disabled={loading}
-							required
-						/>
-					</div>
-
-					<!-- Email -->
-					<div class="form-control mt-4 w-full">
-						<label class="label" for="email">
-							<span class="label-text">البريد الإلكتروني</span>
-						</label>
-						<input
-							id="email"
-							type="email"
-							placeholder="example@email.com"
-							class="input-bordered input w-full"
-							bind:value={email}
-							disabled={loading}
-							required
-						/>
-					</div>
-
-					<!-- Password -->
-					<div class="form-control mt-4 w-full">
-						<label class="label" for="password">
-							<span class="label-text">كلمة المرور</span>
-						</label>
-						<input
-							id="password"
-							type="password"
-							placeholder="••••••••"
-							class="input-bordered input w-full"
-							bind:value={password}
-							disabled={loading}
-							required
-						/>
-					</div>
-
-					<!-- Confirm Password -->
-					<div class="form-control mt-4 w-full">
-						<label class="label" for="confirmPassword">
-							<span class="label-text">تأكيد كلمة المرور</span>
-						</label>
-						<input
-							id="confirmPassword"
-							type="password"
-							placeholder="••••••••"
-							class="input-bordered input w-full"
-							bind:value={confirmPassword}
-							disabled={loading}
-							required
-						/>
-					</div>
-
-					<!-- Submit Button -->
-					<div class="form-control mt-6">
-						<button type="submit" class="btn w-full btn-primary" disabled={loading}>
-							{#if loading}
-								<span class="loading loading-spinner"></span>
-								جاري إنشاء الحساب...
-							{:else}
-								إنشاء حساب
-							{/if}
-						</button>
-					</div>
-				</form>
-
-				<!-- Login Link -->
-				<div class="divider">أو</div>
-				<div class="text-center">
-					<p class="text-sm">
-						لديك حساب بالفعل؟
-						<a href={resolve('/auth/login')} class="link font-semibold link-primary">
-							تسجيل الدخول
-						</a>
-					</p>
+			{#if error}
+				<div class="error-container small-padding round">
+					<i>error</i>
+					<span>{error}</span>
 				</div>
+			{/if}
+
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleSignup();
+				}}
+			>
+				<!-- First Name -->
+				<div class="field label border">
+					<input
+						id="firstName"
+						type="text"
+						placeholder=" "
+						bind:value={firstName}
+						disabled={loading}
+						required
+					/>
+					<label for="firstName">الاسم الأول</label>
+				</div>
+
+				<!-- Last Name -->
+				<div class="field label border">
+					<input
+						id="lastName"
+						type="text"
+						placeholder=" "
+						bind:value={lastName}
+						disabled={loading}
+						required
+					/>
+					<label for="lastName">الاسم الأخير</label>
+				</div>
+
+				<!-- Email -->
+				<div class="field label border">
+					<input
+						id="email"
+						type="email"
+						placeholder=" "
+						bind:value={email}
+						disabled={loading}
+						required
+					/>
+					<label for="email">البريد الإلكتروني</label>
+				</div>
+
+				<!-- Password -->
+				<div class="field label border">
+					<input
+						id="password"
+						type="password"
+						placeholder=" "
+						bind:value={password}
+						disabled={loading}
+						required
+					/>
+					<label for="password">كلمة المرور</label>
+				</div>
+
+				<!-- Confirm Password -->
+				<div class="field label border">
+					<input
+						id="confirmPassword"
+						type="password"
+						placeholder=" "
+						bind:value={confirmPassword}
+						disabled={loading}
+						required
+					/>
+					<label for="confirmPassword">تأكيد كلمة المرور</label>
+				</div>
+
+				<!-- Submit Button -->
+				<button type="submit" class="responsive" disabled={loading}>
+					{#if loading}
+						<progress class="circle small"></progress>
+						<span>جاري إنشاء الحساب...</span>
+					{:else}
+						<i>person_add</i>
+						<span>إنشاء حساب</span>
+					{/if}
+				</button>
+			</form>
+
+			<!-- Login Link -->
+			<div class="small-space"></div>
+			<hr />
+			<div class="small-space"></div>
+			<div class="center-align">
+				<p class="small-text select-none">
+					لديك حساب بالفعل؟
+					<a href={resolve('/auth/login')} class="link bold">تسجيل الدخول</a>
+				</p>
 			</div>
-		</div>
+		</article>
 	</div>
-</div>
+</main>

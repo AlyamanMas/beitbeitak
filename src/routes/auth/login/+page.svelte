@@ -1,9 +1,9 @@
-<!-- TODO: add button to return to main page -->
 <script>
 	import { signIn, onAuthReady } from '$lib/stores/authStore.svelte.js';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
+	import 'beercss';
 
 	let email = $state('');
 	let password = $state('');
@@ -47,94 +47,94 @@
 	}
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-base-200 p-4" dir="rtl">
-	<div class="w-full max-w-md">
+<header class="fixed">
+	<nav>
+		<a href={resolve('/')} class="circle transparent">
+			<i>arrow_forward</i>
+		</a>
+		<h6 class="max select-none">تسجيل الدخول</h6>
+	</nav>
+</header>
+
+<main class="responsive center-align middle-align">
+	<div style="max-width: 28rem; width: 100%;">
 		<!-- Logo/Brand -->
-		<div class="mb-8 text-center">
-			<h1 class="mb-2 text-4xl font-bold text-primary">بيت بيتك</h1>
-			<p class="text-base-content/70">مرحباً بعودتك</p>
-		</div>
+		<h3 class="primary-text select-none">البيت بيتك</h3>
+
+		<div class="small-space"></div>
 
 		<!-- Login Form -->
-		<div class="card bg-base-100 shadow-xl">
-			<div class="card-body">
-				<h2 class="mb-4 card-title text-2xl">تسجيل الدخول</h2>
+		<article class="padding">
+			<h5 class="select-none">تسجيل الدخول</h5>
 
-				{#if error}
-					<div class="mb-4 alert alert-error">
-						<span>{error}</span>
-					</div>
-				{/if}
+			{#if error}
+				<div class="error-container small-padding round">
+					<i>error</i>
+					<span>{error}</span>
+				</div>
+			{/if}
 
-				<form
-					onsubmit={(e) => {
-						e.preventDefault();
-						handleLogin();
-					}}
-				>
-					<!-- Email -->
-					<div class="form-control w-full">
-						<label class="label" for="email">
-							<span class="label-text">البريد الإلكتروني</span>
-						</label>
-						<input
-							id="email"
-							type="email"
-							placeholder="example@email.com"
-							class="input-bordered input w-full"
-							bind:value={email}
-							disabled={loading}
-							required
-						/>
-					</div>
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleLogin();
+				}}
+			>
+				<!-- Email -->
+				<div class="field label border">
+					<input
+						id="email"
+						type="email"
+						placeholder=" "
+						bind:value={email}
+						disabled={loading}
+						required
+					/>
+					<label for="email">البريد الإلكتروني</label>
+				</div>
 
-					<!-- Password -->
-					<div class="form-control mt-4 w-full">
-						<label class="label" for="password">
-							<span class="label-text">كلمة المرور</span>
-						</label>
-						<input
-							id="password"
-							type="password"
-							placeholder="••••••••"
-							class="input-bordered input w-full"
-							bind:value={password}
-							disabled={loading}
-							required
-						/>
-					</div>
-
-					<!-- Forgot Password Link -->
-					<div class="mt-2 text-left">
-						<a href={resolve('/auth/forgot-password')} class="link text-sm link-primary">
+				<!-- Password -->
+				<div class="field label border">
+					<input
+						id="password"
+						type="password"
+						placeholder=" "
+						bind:value={password}
+						disabled={loading}
+						required
+					/>
+					<label for="password">كلمة المرور</label>
+					<span class="helper">
+						<a href={resolve('/auth/forgot-password')} class="link small-text">
 							نسيت كلمة المرور؟
 						</a>
-					</div>
-
-					<!-- Submit Button -->
-					<div class="form-control mt-6">
-						<button type="submit" class="btn w-full btn-primary" disabled={loading}>
-							{#if loading}
-								<span class="loading loading-spinner"></span>
-								جاري تسجيل الدخول...
-							{:else}
-								تسجيل الدخول
-							{/if}
-						</button>
-					</div>
-				</form>
-
-				<!-- Sign Up Link -->
-				<div class="divider">أو</div>
-				<div class="text-center">
-					<p class="text-sm">
-						ليس لديك حساب؟
-						<a href={resolve('/auth/signup')} class="link font-semibold link-primary">
-							إنشاء حساب جديد
-						</a>
-					</p>
+					</span>
 				</div>
+
+				<!-- Forgot Password Link -->
+
+				<!-- Submit Button -->
+				<button type="submit" class="responsive" disabled={loading}>
+					{#if loading}
+						<progress class="circle small"></progress>
+						<span>جاري تسجيل الدخول...</span>
+					{:else}
+						<i>login</i>
+						<span>تسجيل الدخول</span>
+					{/if}
+				</button>
+			</form>
+
+			<!-- Sign Up Link -->
+			<div class="small-space"></div>
+			<hr />
+			<div class="small-space"></div>
+			<div class="center-align">
+				<p class="small-text select-none">
+					ليس لديك حساب؟
+					<a href={resolve('/auth/signup')} class="link bold">إنشاء حساب جديد</a>
+				</p>
 			</div>
-		</div>
+		</article>
 	</div>
-</div>
+</main>

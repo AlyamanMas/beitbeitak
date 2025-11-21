@@ -2,7 +2,7 @@
  * @typedef {Object} HouseListing
  * @property {number} id
  * @property {string} created_at
- * @property {string} town
+ * @property {import('$lib/towns.js').Town} town
  * @property {number} rent_per_month
  * @property {string} author
  * @property {number} size_m2

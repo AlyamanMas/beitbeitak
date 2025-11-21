@@ -178,9 +178,11 @@
 			</div>
 		</div>
 	{:else}
-		{#each data.listings as listing (listing.id)}
-			<ListingCard {listing} />
-		{/each}
+		<div id="listings-grid" class="flex flex-wrap justify-center gap-4">
+			{#each data.listings as listing (listing.id)}
+				<ListingCard {listing} />
+			{/each}
+		</div>
 	{/if}
 
 	<!-- FAB -->

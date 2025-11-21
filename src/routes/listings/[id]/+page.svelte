@@ -10,7 +10,19 @@
 	/** @type {import('./$types').PageProps} */
 	let { data } = $props();
 
+	// --- ZOOM STATE ---
 	let currentImageIndex = $state(0);
+	let overlayVisible = $state(false);
+
+	// We store everything in a single transform object
+	let transform = $state({ x: 0, y: 0, scale: 1 });
+
+	// Pointer cache for multi-touch tracking
+	let pointers = $state(new Map());
+	let startDist = 0;
+	let startScale = 1;
+	let startCenter = { x: 0, y: 0 };
+	let startTransform = { x: 0, y: 0 };
 
 	/**
 	 * Check if the current user is the author of this listing
@@ -111,6 +123,201 @@
 			isDeleting = false;
 		}
 	}
+
+	function openImageOverlay(index) {
+		currentImageIndex = index;
+		overlayVisible = true;
+		resetZoom();
+	}
+
+	function closeImageOverlay() {
+		overlayVisible = false;
+		resetZoom();
+	}
+
+	function resetZoom() {
+		transform = { x: 0, y: 0, scale: 1 };
+		pointers.clear();
+	}
+
+	function getDistance(p1, p2) {
+		return Math.hypot(p1.clientX - p2.clientX, p1.clientY - p2.clientY);
+	}
+
+	function getCenter(p1, p2) {
+		return {
+			x: (p1.clientX + p2.clientX) / 2,
+			y: (p1.clientY + p2.clientY) / 2
+		};
+	}
+
+	function handlePointerDown(e) {
+		// Add pointer to cache
+		pointers.set(e.pointerId, e);
+
+		// Setup initial state for interactions
+		const points = Array.from(pointers.values());
+
+		if (points.length === 1) {
+			// Panning initialization
+			startCenter = { x: points[0].clientX, y: points[0].clientY };
+			startTransform = { ...transform };
+		} else if (points.length === 2) {
+			// Pinch initialization
+			startDist = getDistance(points[0], points[1]);
+			startScale = transform.scale;
+			startCenter = getCenter(points[0], points[1]);
+			startTransform = { ...transform };
+		}
+	}
+
+	function handlePointerMove(e) {
+		if (!pointers.has(e.pointerId)) return;
+
+		// Update the pointer in the cache
+		pointers.set(e.pointerId, e);
+		const points = Array.from(pointers.values());
+
+		if (points.length === 1 && transform.scale > 1) {
+			// --- PANNING (1 Finger) ---
+			// Only allow panning if zoomed in
+			e.preventDefault(); // Prevent scrolling page
+			const dx = points[0].clientX - startCenter.x;
+			const dy = points[0].clientY - startCenter.y;
+
+			transform.x = startTransform.x + dx;
+			transform.y = startTransform.y + dy;
+		} else if (points.length === 2) {
+			// --- PINCH ZOOMING (2 Fingers) ---
+			e.preventDefault();
+
+			// 1. Calculate new scale
+			const currentDist = getDistance(points[0], points[1]);
+			const scaleRatio = currentDist / startDist;
+			let newScale = startScale * scaleRatio;
+
+			// Clamp scale (0.5x to 5x)
+			newScale = Math.min(Math.max(0.5, newScale), 5);
+
+			// 2. Calculate position adjustment to keep focal point stable
+			// This is the magic math that fixes the "drifting"
+			const currentCenter = getCenter(points[0], points[1]);
+
+			// How much the center of the pinch moved
+			const centerDx = currentCenter.x - startCenter.x;
+			const centerDy = currentCenter.y - startCenter.y;
+
+			// Calculate where the image was relative to the pinch center
+			const originalPointX = startCenter.x - startTransform.x;
+			const originalPointY = startCenter.y - startTransform.y;
+
+			// Apply the new scale factor to that relative distance
+			const newPointX = originalPointX * (newScale / startScale);
+			const newPointY = originalPointY * (newScale / startScale);
+
+			transform.scale = newScale;
+			transform.x = currentCenter.x - newPointX; // Panning delta is implicitly handled here
+			transform.y = currentCenter.y - newPointY;
+		}
+	}
+
+	function handlePointerUp(e) {
+		pointers.delete(e.pointerId);
+
+		// If we let go and we are zoomed out less than 1, snap back
+		if (pointers.size === 0 && transform.scale < 1) {
+			resetZoom();
+		}
+
+		// If we go from 2 fingers to 1, reset the start center
+		// so the image doesn't "jump" to the old single-finger position
+		const points = Array.from(pointers.values());
+		if (points.length === 1) {
+			startCenter = { x: points[0].clientX, y: points[0].clientY };
+			startTransform = { ...transform };
+		}
+	}
+
+	function handleWheel(e) {
+		e.preventDefault();
+		const zoomIntensity = 0.1;
+		const direction = e.deltaY > 0 ? -1 : 1;
+		const factor = 1 + zoomIntensity * direction;
+
+		let newScale = transform.scale * factor;
+		newScale = Math.min(Math.max(1, newScale), 5); // Clamp
+
+		// Zoom towards mouse cursor
+		// relative cursor pos
+		const rect = e.currentTarget.getBoundingClientRect();
+		const mouseX = e.clientX - rect.left; // relative to container
+		const mouseY = e.clientY - rect.top;
+
+		// Calculate the point on the image under the cursor
+		// (mouseX - currentX) / currentScale
+		const pointX = (mouseX - transform.x) / transform.scale;
+		const pointY = (mouseY - transform.y) / transform.scale;
+
+		// New position = mouse - (point * newScale)
+		transform.x = mouseX - pointX * newScale;
+		transform.y = mouseY - pointY * newScale;
+		transform.scale = newScale;
+	}
+
+	/**
+	 * Navigate to previous image
+	 */
+	function previousImage() {
+		if (currentImageIndex > 0) {
+			currentImageIndex--;
+			resetZoom();
+		}
+	}
+
+	/**
+	 * Navigate to next image
+	 */
+	function nextImage() {
+		if (currentImageIndex < data.listing.listing_to_pic.length - 1) {
+			currentImageIndex++;
+			resetZoom();
+		}
+	}
+
+	/**
+	 * Download current image
+	 */
+	async function downloadImage() {
+		const picName = data.listing.listing_to_pic[currentImageIndex].pic_name;
+
+		const imageUrl = getImageUrl(picName);
+
+		try {
+			const response = await fetch(imageUrl);
+
+			const blob = await response.blob();
+
+			const url = window.URL.createObjectURL(blob);
+
+			const a = document.createElement('a');
+
+			a.href = url;
+
+			a.download = picName || 'image.jpg';
+
+			document.body.appendChild(a);
+
+			a.click();
+
+			window.URL.revokeObjectURL(url);
+
+			document.body.removeChild(a);
+		} catch (err) {
+			console.error('Error downloading image:', err);
+
+			alert('حدث خطأ أثناء تحميل الصورة');
+		}
+	}
 </script>
 
 <header class="fixed">
@@ -125,7 +332,7 @@
 <main class="responsive">
 	{#if data.listing.listing_to_pic && data.listing.listing_to_pic.length > 0}
 		<div class="relative" role="region" aria-label="معرض الصور">
-			<div class="small-round">
+			<div class="small-round cursor-pointer" onclick={() => openImageOverlay(currentImageIndex)}>
 				<img
 					src={getImageUrl(data.listing.listing_to_pic[currentImageIndex].pic_name)}
 					alt="صورة العقار"
@@ -147,7 +354,7 @@
 		{#if data.listing.listing_to_pic.length > 1}
 			<div class="row scroll left-padding right-padding" role="region" aria-label="الصور المصغرة">
 				{#each data.listing.listing_to_pic as pic, index (pic)}
-					<article onclick={() => (currentImageIndex = index)} class="no-padding">
+					<article onclick={() => (currentImageIndex = index)} class="no-padding cursor-pointer">
 						<img
 							src={getImageUrl(pic.pic_name)}
 							alt="صورة مصغرة {index + 1}"
@@ -342,3 +549,70 @@
 		</button>
 	</nav>
 </dialog>
+
+<!-- Image overlay viewer -->
+{#if overlayVisible && data.listing.listing_to_pic && data.listing.listing_to_pic.length > 0}
+	<div
+		class="overlay active center-align middle-align"
+		style="background: rgba(0, 0, 0, 0.95); z-index: 9999; touch-action: none;"
+		onclick={closeImageOverlay}
+		role="dialog"
+		aria-label="عارض الصور"
+	>
+		<div
+			class="top left right absolute"
+			style="z-index: 10000; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent); padding: 1rem;"
+			onclick={(e) => e.stopPropagation()}
+		>
+			<nav class="transparent">
+				<button onclick={closeImageOverlay} class="transparent circle" aria-label="إغلاق">
+					<i class="white-text">close</i>
+				</button>
+
+				<div class="max"></div>
+
+				{#if data.listing.listing_to_pic.length > 1}
+					<span class="chip small-blur">
+						{currentImageIndex + 1} / {data.listing.listing_to_pic.length}
+					</span>
+				{/if}
+
+				<button onclick={downloadImage} class="transparent circle" aria-label="تحميل الصورة">
+					<i class="white-text">download</i>
+				</button>
+			</nav>
+		</div>
+
+		<div
+			class="center-align middle-align h-full w-full"
+			onclick={(e) => e.stopPropagation()}
+			style="overflow: hidden; touch-action: none; position: relative;"
+			onpointerdown={handlePointerDown}
+			onpointermove={handlePointerMove}
+			onpointerup={handlePointerUp}
+			onpointercancel={handlePointerUp}
+			onpointerleave={handlePointerUp}
+			onwheel={handleWheel}
+		>
+			<img
+				src={getImageUrl(data.listing.listing_to_pic[currentImageIndex].pic_name)}
+				alt="صورة العقار {currentImageIndex + 1}"
+				style="
+                    max-width: 100%;
+                    max-height: 100vh;
+                    object-fit: contain;
+                    /* The Key Change: Origin top-left makes the math linear */
+                    transform-origin: 0 0; 
+                    transform: translate({transform.x}px, {transform.y}px) scale({transform.scale});
+                    transition: {pointers.size === 0
+					? 'transform 0.2s cubic-bezier(0.1, 0.7, 0.1, 1)'
+					: 'none'};
+                    user-select: none;
+                    -webkit-user-select: none;
+                    pointer-events: none; /* Let events bubble to parent div */
+                "
+				draggable="false"
+			/>
+		</div>
+	</div>
+{/if}
